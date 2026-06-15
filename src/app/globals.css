@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@import "@catppuccin/tailwindcss/mocha.css";
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.pixelated {
+	image-rendering: pixelated;
+	image-rendering: -moz-crisp-edges;
+}
+
+.absolute-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+li {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+ul,
+ol {
+	margin-left: 16px !important;
+}
+
+ul {
+	list-style-type: disc !important;
+
+	& li ul {
+		list-style-type: circle !important;
+
+		& li ul {
+			list-style-type: square !important;
+		}
+	}
+}
+
+ol {
+	list-style-type: decimal !important;
+}
+
+h1 {
+	font-size: 2rem;
+	font-weight: 700;
+}
+
+h2 {
+	font-size: 1.75rem;
+	font-weight: 600;
+}
+
+h3 {
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+h4 {
+	font-size: 1.25rem;
+}
+
+hr {
+	border-color: var(--color-ctp-surface0);
+}
+
+code,
+code span {
+	background-color: var(--color-ctp-mantle) !important;
+}
+
+blockquote {
+	color: var(--color-ctp-subtext0) !important;
+	border-color: var(--color-ctp-surface0) !important;
+}
