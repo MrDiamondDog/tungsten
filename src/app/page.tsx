@@ -5,11 +5,14 @@ import Divider from "@/components/primitives/Divider";
 import Input from "@/components/primitives/Input";
 import LinkButton from "@/components/primitives/LinkButton";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
+	const searchParams = useSearchParams();
+
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
+	const [error, setError] = useState(searchParams.has("error") ? "Invalid email or password." : "");
 
 	const [mode, setMode] = useState<"signin" | "signup">("signin");
 
@@ -18,7 +21,7 @@ export default function HomePage() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 
 	useEffect(() => {
-		setError("");
+		setError(searchParams.has("error") ? "Invalid email or password." : "");
 		if (password !== confirmPassword && mode === "signup")
 			return void setError("Passwords do not match");
 	}, [password, confirmPassword]);
