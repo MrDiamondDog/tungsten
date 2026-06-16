@@ -27,6 +27,8 @@ export default function RootLayout({
 				<SessionProvider>
 					{children}
 				</SessionProvider>
+
+				<div id="portal-root" />
 			</body>
 		</html>
 	);

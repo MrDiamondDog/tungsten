@@ -27,7 +27,7 @@ export function DropdownTrigger(props: DropdownMenuTriggerProps) {
 export function DropdownContent(props: DropdownMenuContentProps) {
 	return (<DropdownMenuPortal>
 		<DropdownMenuContent {...props}
-			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 rounded-lg p-2 min-w-50`}>
+			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-50`}>
 			{props.children}
 		</DropdownMenuContent>
 	</DropdownMenuPortal>);
@@ -35,7 +35,7 @@ export function DropdownContent(props: DropdownMenuContentProps) {
 
 export function DropdownItem(props: DropdownMenuItemProps) {
 	return (<DropdownMenuItem {...props}
-		className={`${props.className && ""} rounded-lg px-2 py-1 hover:bg-ctp-surface0 cursor-pointer outline-none transition-all`}>
+		className={`${props.className && ""} px-2 py-1 hover:bg-ctp-surface0 cursor-pointer outline-none transition-all`}>
 		{props.children}
 	</DropdownMenuItem>);
 }

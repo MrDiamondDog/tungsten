@@ -76,7 +76,7 @@ export default function HomePage() {
 		});
 	}
 
-	return <main className="absolute-center border border-ctp-surface0 rounded-lg p-4 w-75">
+	return <main className="absolute-center border border-ctp-surface0 p-4 w-75">
 		<h2>{mode === "signin" ? "Log In" : "Sign Up"}</h2>
 		<Divider />
 		<div className="flex flex-col gap-1">

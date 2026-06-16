@@ -1,55 +1,9 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "11859c57-ecec-4e38-8e0c-bd7b9bfba404",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "abc57fdc-eee6-45be-9558-8442d2bd7a7e",
+  "prevId": "11859c57-ecec-4e38-8e0c-bd7b9bfba404",
   "tables": {
-    "fileContent": {
-      "name": "fileContent",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "fileId": {
-          "name": "fileId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "text": {
-          "name": "text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "''"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "fileContent_fileId_file_id_fk": {
-          "name": "fileContent_fileId_file_id_fk",
-          "tableFrom": "fileContent",
-          "tableTo": "file",
-          "columnsFrom": [
-            "fileId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
     "file": {
       "name": "file",
       "columns": {
@@ -80,6 +34,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
         }
       },
       "indexes": {},

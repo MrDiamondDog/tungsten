@@ -85,7 +85,10 @@
 		"spaced-comment": "warn",
 		"indent": [
 			"warn",
-			"tab"
+			"tab",
+			{
+				"SwitchCase": 1
+			}
 		],
 		"@typescript-eslint/space-before-blocks": "warn",
 		"keyword-spacing": "warn",
@@ -113,7 +116,7 @@
 		"max-len": [
 			"warn",
 			{
-				"code": 135
+				"code": 150
 			}
 		],
 		"block-spacing": "warn",

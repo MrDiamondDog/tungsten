@@ -1,38 +1,28 @@
 "use client";
 
-import EditorTabs from "@/components/editor/EditorTabs";
+import Editor from "@/components/editor/Editor";
+import { EditorProvider } from "@/components/editor/EditorContext";
 import MenuBar from "@/components/editor/MenuBar";
-import Sidebar from "@/components/editor/Sidebar";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-
-const MDEditor = dynamic(() => import("@/components/editor/MDEditor"), {
-	ssr: false,
-});
+import Spinner from "@/components/primitives/Spinner";
+import { useSession } from "next-auth/react";
+import { Suspense } from "react";
 
 export default function EditorPage() {
-	const [markdown, setMarkdown] = useState(
-		"# Hi\n## hi 2\n### hi 3\n#### hi 4\n- unordered list\n1. ordered list",
-	);
+	const session = useSession();
 
-	const [pages, setPages] = useState(["file 1", "file 2", "file 3"]);
-	const [selectedPage, setSelectedPage] = useState(pages[0]);
+	if (!session)
+		return null;
 
 	return (
-		<main className="w-full h-full">
-			<MenuBar />
-			<div className="h-full flex">
-				<Sidebar />
-				<div className="w-full">
-					<EditorTabs
-						tabs={pages}
-						selected={selectedPage}
-						onListChange={setPages}
-						onSelectedChange={setSelectedPage}
-					/>
-					{selectedPage && <MDEditor markdown={markdown} />}
-				</div>
-			</div>
+		<main className="w-full h-full overflow-hidden">
+			<Suspense fallback={<Spinner className="absolute-center" />}>
+				<EditorProvider>
+					<MenuBar />
+					<div className="h-full flex">
+						<Editor />
+					</div>
+				</EditorProvider>
+			</Suspense>
 		</main>
 	);
 }
