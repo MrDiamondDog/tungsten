@@ -27,7 +27,7 @@ export function DropdownTrigger(props: DropdownMenuTriggerProps) {
 export function DropdownContent(props: DropdownMenuContentProps) {
 	return (<DropdownMenuPortal>
 		<DropdownMenuContent {...props}
-			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-50`}>
+			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-40 shadow-md`}>
 			{props.children}
 		</DropdownMenuContent>
 	</DropdownMenuPortal>);

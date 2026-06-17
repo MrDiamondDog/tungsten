@@ -4,7 +4,7 @@ import { useEditor, useEditorDispatch } from "./EditorContext";
 import { File } from "@/db/types";
 
 export default function EditorTabs() {
-	const { files, openFiles, selectedFile } = useEditor();
+	const { files, openFiles, selectedFile, unsavedFiles } = useEditor();
 	const dispatch = useEditorDispatch();
 
 	const [hovered, setHovered] = useState<File>();
@@ -23,14 +23,14 @@ export default function EditorTabs() {
 					key={tab.id}
 				>
 					{tab.name}
-					<X
-						className={`size-4 text-ctp-subtext0 hover:bg-ctp-surface1 p-0.5 rounded-sm transition-all
+					{(!unsavedFiles.includes(tab.id) || hovered?.id === tab.id) && <X
+						className={`size-4 text-ctp-subtext0 hover:bg-ctp-surface1 p-0.5 transition-all
 						${(hovered?.id === tab.id || selectedFile === tab.id) ? "opacity-100" : "opacity-0"}`}
 						onClick={e => {
 							e.stopPropagation();
 							dispatch?.({ type: "close-file", file: tab.id });
-						}} />
-					{/* {(!hovered && selectedFile === tab) && <div className="rounded-full bg-ctp-text size-1.5 p-0.5 ml-0.5" />}*/}
+						}} />}
+					{(hovered?.id !== tab.id && unsavedFiles.includes(tab.id)) && <div className="rounded-full bg-ctp-text size-1.5 p-0.5 mx-1" />}
 				</div>
 			))}
 		</div>

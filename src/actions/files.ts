@@ -37,3 +37,25 @@ export async function createFile(name: string): ActionRes<File> {
 
 	return file;
 }
+
+export async function editFile(id: string, newFile: File): ActionRes<File> {
+	const user = await auth();
+
+	if (!user?.user)
+		return { error: "Not authenticated" };
+
+	const file = (await db.select().from(files)
+		.where(eq(files.id, id)))[0];
+
+	if (!file)
+		return { error: "Not found" };
+
+	if (file.id !== newFile.id || file.userId !== file.userId)
+		return { error: "Invalid fields" };
+
+	const editedFile = (await db.update(files).set(newFile)
+		.where(eq(files.id, id))
+		.returning())[0];
+
+	return { data: editedFile };
+}

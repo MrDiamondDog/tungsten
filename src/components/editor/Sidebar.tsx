@@ -1,11 +1,12 @@
 "use client";
 
 import { File } from "@/db/types";
-import { ChevronRight, FileIcon } from "lucide-react";
+import { ChevronRight, EllipsisVertical, FileIcon } from "lucide-react";
 import { useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../primitives/Dropdown";
 
-export function SidebarButton({
+export function SidebarFile({
 	children,
 	folder,
 	selected,
@@ -15,18 +16,29 @@ export function SidebarButton({
 	return (
 		<button
 			className={`${selected ? "bg-ctp-surface0" : "hover:bg-ctp-surface0"}
-				w-full text-left px-2 py-1 cursor-pointer transition-colors flex gap-1 items-center`}
+				w-full text-left px-2 py-1 cursor-pointer transition-colors flex justify-between items-center`}
 			{...props}
 		>
-			{folder ? (
-				<ChevronRight
-					size={18}
-					className={`${selected ? "rotate-90" : ""} transition-transform`}
-				/>
-			) : (
-				<FileIcon size={18} />
-			)}{" "}
-			{children}
+			<div className="flex gap-1 items-center">
+				{folder ? (
+					<ChevronRight
+						size={18}
+						className={`${selected ? "rotate-90" : ""} transition-transform`}
+					/>
+				) : (
+					<FileIcon size={18} />
+				)}{" "}
+				{children}
+			</div>
+			<Dropdown>
+				<DropdownTrigger asChild>
+					<div className="hover:bg-ctp-surface1 py-1 transition-colors text-ctp-subtext0"><EllipsisVertical size={16} /></div>
+				</DropdownTrigger>
+				<DropdownContent>
+					<DropdownItem>Edit</DropdownItem>
+					<DropdownItem>Delete</DropdownItem>
+				</DropdownContent>
+			</Dropdown>
 		</button>
 	);
 }
@@ -39,9 +51,9 @@ export function SidebarFolder({
 
 	return (
 		<div>
-			<SidebarButton folder selected={open} onClick={() => setOpen(!open)}>
+			<SidebarFile folder selected={open} onClick={() => setOpen(!open)}>
 				{name}
-			</SidebarButton>
+			</SidebarFile>
 			{open && (
 				<div className="pl-1 ml-3 flex flex-col gap-1 mt-1 border-l border-ctp-surface0">
 					{children}
@@ -64,22 +76,22 @@ export default function Sidebar() {
 
 	return (
 		<div className="w-fit min-w-60 h-full p-2 border-r border-ctp-surface0 flex flex-col gap-1">
-			{files.filter(file => !file.folderId).map(file => <SidebarButton
+			{files.filter(file => !file.folderId).map(file => <SidebarFile
 				key={file.id}
 				selected={selectedFile === file.id}
 				onClick={() => onFileClick(file)}
 			>
 				{file.name}
-			</SidebarButton>)}
+			</SidebarFile>)}
 			{folders.map(folder => <SidebarFolder name={folder.name}>
 				{files.filter(file => file.folderId === folder.id)
-					.map(file => <SidebarButton
+					.map(file => <SidebarFile
 						key={file.id}
 						selected={selectedFile === file.id}
 						onClick={() => onFileClick(file)}
 					>
 						{file.name}
-					</SidebarButton>)}
+					</SidebarFile>)}
 			</SidebarFolder>)}
 		</div>
 	);

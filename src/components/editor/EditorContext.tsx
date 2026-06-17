@@ -3,7 +3,13 @@ import { getFolders } from "@/actions/folders";
 import { File, Folder } from "@/db/types";
 import { ActionDispatch, createContext, useContext, useEffect, useReducer } from "react";
 
-export type EditorData = { files: File[], folders: Folder[], selectedFile?: string, openFiles: string[] }
+export type EditorData = {
+	files: File[],
+	folders: Folder[],
+	selectedFile?: string,
+	openFiles: string[],
+	unsavedFiles: string[],
+}
 
 export type EditorAction =
 	{ type: "create-file", file: File } |
@@ -12,6 +18,8 @@ export type EditorAction =
 	{ type: "select-file", file?: string } |
 	{ type: "open-file", file: string } |
 	{ type: "close-file", file: string } |
+	{ type: "unsaved-file", file: string } |
+	{ type: "saved-file", file: string } |
 	{ type: "create-folder", folder: Folder } |
 	{ type: "edit-folder", folder: Folder } |
 	{ type: "delete-folder", folder: Folder } |
@@ -26,7 +34,6 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		}
 		case "edit-file": {
 			const fileIndex = data.files.findIndex(f => f.id === action.file.id);
-			console.log(action.file, fileIndex);
 			return { ...data, files: [...data.files.slice(0, fileIndex), action.file, ...data.files.slice(fileIndex + 1)] };
 		}
 		case "delete-file": {
@@ -54,7 +61,19 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		}
 		case "close-file": {
 			const fileIndex = data.openFiles.findIndex(f => f === action.file);
-			return { ...data, openFiles: [...data.openFiles.slice(0, fileIndex), ...data.openFiles.slice(fileIndex + 1)] };
+			const newOpenFiles = [...data.openFiles.slice(0, fileIndex), ...data.openFiles.slice(fileIndex + 1)];
+			if (action.file === data.selectedFile)
+				data.selectedFile = newOpenFiles[0] ?? undefined;
+			return { ...data, openFiles: newOpenFiles };
+		}
+		case "unsaved-file": {
+			if (data.unsavedFiles.includes(action.file))
+				return data;
+			return { ...data, unsavedFiles: [...data.unsavedFiles, action.file] };
+		}
+		case "saved-file": {
+			const fileIndex = data.unsavedFiles.findIndex(f => f === action.file);
+			return { ...data, unsavedFiles: [...data.unsavedFiles.slice(0, fileIndex), ...data.unsavedFiles.slice(fileIndex + 1)] };
 		}
 		case "set-files": {
 			console.log(action.files);
@@ -69,11 +88,11 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 	}
 }
 
-export const EditorContext = createContext<EditorData>({ files: [], folders: [], openFiles: [] });
+export const EditorContext = createContext<EditorData>({ files: [], folders: [], openFiles: [], unsavedFiles: [] });
 export const EditorDispatchContext = createContext<ActionDispatch<[EditorAction]> | null>(null);
 
 export function EditorProvider({ children }: React.PropsWithChildren) {
-	const [data, dispatch] = useReducer(editorReducer, { files: [], folders: [], openFiles: [] } as EditorData);
+	const [data, dispatch] = useReducer(editorReducer, { files: [], folders: [], openFiles: [], unsavedFiles: [] } as EditorData);
 
 	useEffect(() => {
 		getFiles().then(res => {
