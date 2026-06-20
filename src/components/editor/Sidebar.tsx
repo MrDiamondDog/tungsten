@@ -1,10 +1,10 @@
 "use client";
 
 import { File } from "@/db/types";
-import { ChevronRight, EllipsisVertical, FileIcon } from "lucide-react";
+import { ChevronRight, FileIcon } from "lucide-react";
 import { useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
-import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../primitives/Dropdown";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "../primitives/ContextMenu";
 
 export function SidebarFile({
 	children,
@@ -14,32 +14,32 @@ export function SidebarFile({
 }: { selected?: boolean; folder?: boolean } & React.PropsWithChildren &
 	React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return (
-		<button
-			className={`${selected ? "bg-ctp-surface0" : "hover:bg-ctp-surface0"}
+		<ContextMenu>
+			<ContextMenuTrigger asChild>
+				<button
+					className={`${(selected && !folder) ? "bg-ctp-surface0" : "hover:bg-ctp-surface0"}
 				w-full text-left px-2 py-1 cursor-pointer transition-colors flex justify-between items-center`}
-			{...props}
-		>
-			<div className="flex gap-1 items-center">
-				{folder ? (
-					<ChevronRight
-						size={18}
-						className={`${selected ? "rotate-90" : ""} transition-transform`}
-					/>
-				) : (
-					<FileIcon size={18} />
-				)}{" "}
-				{children}
-			</div>
-			<Dropdown>
-				<DropdownTrigger asChild>
-					<div className="hover:bg-ctp-surface1 py-1 transition-colors text-ctp-subtext0"><EllipsisVertical size={16} /></div>
-				</DropdownTrigger>
-				<DropdownContent>
-					<DropdownItem>Edit</DropdownItem>
-					<DropdownItem>Delete</DropdownItem>
-				</DropdownContent>
-			</Dropdown>
-		</button>
+					{...props}
+				>
+					<div className="flex gap-1 items-center">
+						{folder ? (
+							<ChevronRight
+								size={18}
+								className={`${selected ? "rotate-90" : ""} transition-transform`}
+							/>
+						) : (
+							<FileIcon size={18} />
+						)}{" "}
+						{children}
+					</div>
+				</button>
+			</ContextMenuTrigger>
+			<ContextMenuContent>
+				<ContextMenuItem>Rename</ContextMenuItem>
+				<ContextMenuItem>Copy</ContextMenuItem>
+				<ContextMenuItem>Delete</ContextMenuItem>
+			</ContextMenuContent>
+		</ContextMenu>
 	);
 }
 
@@ -83,7 +83,7 @@ export default function Sidebar() {
 			>
 				{file.name}
 			</SidebarFile>)}
-			{folders.map(folder => <SidebarFolder name={folder.name}>
+			{folders.map(folder => <SidebarFolder name={folder.name} key={folder.id}>
 				{files.filter(file => file.folderId === folder.id)
 					.map(file => <SidebarFile
 						key={file.id}

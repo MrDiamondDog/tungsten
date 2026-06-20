@@ -17,7 +17,7 @@ import { File } from "@/db/types";
 import { editFile } from "@/actions/files";
 
 export default function MDEditor() {
-	const { files, selectedFile, unsavedFiles } = useEditor();
+	const { files, selectedFile } = useEditor();
 	const [file, setFile] = useState<File>();
 	const [content, setContent] = useState("");
 

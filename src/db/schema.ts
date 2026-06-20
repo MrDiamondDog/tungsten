@@ -37,5 +37,8 @@ export const folders = sqliteTable("folder", {
 	files: text("files", { mode: "json" }).default("[]")
 		.$type<string[]>()
 		.notNull(),
+	folders: text("folders", { mode: "json" }).default("[]")
+		.$type<string[]>()
+		.notNull(),
 	name: text("name").notNull(),
 });

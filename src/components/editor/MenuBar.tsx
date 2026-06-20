@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Dropdown, DropdownContent, DropdownItem, DropdownSeparator, DropdownTrigger } from "../primitives/Dropdown";
 import NewFileModal from "../modals/NewFileModal";
+import NewFolderModal from "../modals/NewFolderModal";
 
 export function MenuBarItem({ name, ...props }: { name: string } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return <Dropdown>
@@ -39,5 +40,6 @@ export default function MenuBar() {
 			</MenuBarItem>
 		</div>
 		<NewFileModal open={openModal === "new-file"} onClose={() => setOpenModal("")} />
+		<NewFolderModal open={openModal === "new-folder"} onClose={() => setOpenModal("")} />
 	</>);
 }
