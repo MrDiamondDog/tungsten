@@ -17,7 +17,7 @@ import { File } from "@/db/types";
 import { editFile } from "@/actions/files";
 
 export default function MDEditor() {
-	const { files, selectedFile } = useEditor();
+	const { files, selectedFile, unsavedFiles } = useEditor();
 	const [file, setFile] = useState<File>();
 	const [content, setContent] = useState("");
 
@@ -41,8 +41,8 @@ export default function MDEditor() {
 
 		if (file.content !== content)
 			dispatch?.({ type: "unsaved-file", file: file.id });
-		else
-			dispatch?.({ type: "saved-file", file: file.id });
+
+		dispatch?.({ type: "edit-file", file: { ...file, content } });
 	}, [content]);
 
 	useEffect(() => {
