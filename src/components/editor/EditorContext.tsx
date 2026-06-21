@@ -7,7 +7,6 @@ export type EditorData = {
 	cachedContent: Record<string, string>,
 	selectedFile?: string,
 	openFiles: string[],
-	unsavedFiles: string[],
 }
 
 export type EditorAction =
@@ -19,8 +18,6 @@ export type EditorAction =
 	{ type: "select-file", file?: string } |
 	{ type: "open-file", file: string } |
 	{ type: "close-file", file: string } |
-	{ type: "unsaved-file", file: string } |
-	{ type: "saved-file", file: string } |
 	{ type: "cache-content", nodeId: string, content: string };
 
 function editorReducer(data: EditorData, action: EditorAction): EditorData {
@@ -49,15 +46,6 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 				data.selectedFile = newOpenFiles[0] ?? undefined;
 			return { ...data, openFiles: newOpenFiles };
 		}
-		case "unsaved-file": {
-			if (data.unsavedFiles.includes(action.file))
-				return data;
-			return { ...data, unsavedFiles: [...data.unsavedFiles, action.file] };
-		}
-		case "saved-file": {
-			const fileIndex = data.unsavedFiles.findIndex(f => f === action.file);
-			return { ...data, unsavedFiles: [...data.unsavedFiles.slice(0, fileIndex), ...data.unsavedFiles.slice(fileIndex + 1)] };
-		}
 		case "set-nodes": {
 			return { ...data, nodes: action.nodes };
 		}
@@ -70,11 +58,11 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 	}
 }
 
-export const EditorContext = createContext<EditorData>({ nodes: [], openFiles: [], unsavedFiles: [], cachedContent: {} });
+export const EditorContext = createContext<EditorData>({ nodes: [], openFiles: [], cachedContent: {} });
 export const EditorDispatchContext = createContext<ActionDispatch<[EditorAction]> | null>(null);
 
 export function EditorProvider({ children }: React.PropsWithChildren) {
-	const [data, dispatch] = useReducer(editorReducer, { nodes: [], openFiles: [], unsavedFiles: [], cachedContent: {} } as EditorData);
+	const [data, dispatch] = useReducer(editorReducer, { nodes: [], openFiles: [], cachedContent: {} } as EditorData);
 
 	useEffect(() => {
 		getNodes().then(res => {
