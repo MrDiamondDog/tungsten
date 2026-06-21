@@ -97,7 +97,7 @@ blockquote {
 	--basePageBg: var(--color-ctp-base) !important;
 	--baseBase: var(--color-ctp-base) !important;
 	--baseBgSubtle: var(--color-ctp-base) !important;
-	--baseBg: var(--color-ctp-base) !important;
+	--baseBg: var(--color-ctp-surface0) !important;
 	--baseBgHover: var(--color-ctp-surface0) !important;
 	--baseBgActive: var(--color-ctp-surface1) !important;
 	--baseLine: var(--color-ctp-surface0) !important;
@@ -113,8 +113,28 @@ blockquote {
 	cursor: pointer !important;
 }
 
+.mdxeditor a {
+	color: var(--color-ctp-blue-500);
+}
+
 .mdxeditor-popup-container div[role="option"] {
 	cursor: pointer !important;
+}
+
+svg[class*=_popoverArrow] {
+	display: none !important;
+}
+
+[data-radix-popper-content-wrapper] {
+	border-radius: 0 !important;
+
+	* {
+		border-radius: 0 !important;
+	}
+
+	button {
+		cursor: pointer;
+	}
 }
 
 .mdx-toolbar {

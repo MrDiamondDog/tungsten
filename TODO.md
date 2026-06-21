@@ -2,8 +2,9 @@
 -[x] Folders
 -[x] Drag and drop for sidebar
 -[x] Drag and drop for tabs
--[ ] File links
--[ ] Markdown toolbar
+-[x] Links
+-[ ] Links between pages
+-[x] Markdown toolbar
 -[x] Highlighted code blocks
 -[ ] Theme switcher
 -[ ] Export files as HTML or Markdown

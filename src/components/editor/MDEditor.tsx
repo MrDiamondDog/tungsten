@@ -5,9 +5,12 @@ import {
 	codeBlockPlugin,
 	codeMirrorPlugin,
 	CodeToggle,
+	CreateLink,
 	headingsPlugin,
 	InsertCodeBlock,
 	InsertThematicBreak,
+	linkDialogPlugin,
+	linkPlugin,
 	listsPlugin,
 	ListsToggle,
 	markdownShortcutPlugin,
@@ -92,6 +95,8 @@ export default function MDEditor() {
 					listsPlugin(),
 					codeBlockPlugin(),
 					thematicBreakPlugin(),
+					linkPlugin(),
+					linkDialogPlugin(),
 					codeMirrorPlugin({
 						codeBlockLanguages: [],
 						codeMirrorExtensions: [catppuccinMocha],
@@ -103,6 +108,7 @@ export default function MDEditor() {
 							<UndoRedo />
 							<BoldItalicUnderlineToggles />
 							<ListsToggle />
+							<CreateLink />
 							<InsertThematicBreak />
 							<CodeToggle />
 							<InsertCodeBlock />
