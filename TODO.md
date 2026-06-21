@@ -14,7 +14,8 @@
 ## BUGS
 -[x] Changing tabs with unsaved content clears unsaved content
 -[x] Code blocks are SLOWWWW
--[ ] ~~File still unsaved after returning to original content~~ (fixed in overhaul)
+-[x] ~~File still unsaved after returning to original content~~ (fixed in overhaul)
+-[ ] Scrolling
 -[ ] Extraneous newlines get obliterated
 -[ ] Change saving every content change to saving on intervals if it has changed
--[ ] Code block language selector (remove it or fix it)
+-[ ] Code block language selector (removed for now waiting on https://github.com/mdx-editor/editor/discussions/943)

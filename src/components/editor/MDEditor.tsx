@@ -1,15 +1,22 @@
 "use client";
 
 import {
+	BoldItalicUnderlineToggles,
 	codeBlockPlugin,
 	codeMirrorPlugin,
+	CodeToggle,
 	headingsPlugin,
+	InsertCodeBlock,
+	InsertThematicBreak,
 	listsPlugin,
+	ListsToggle,
 	markdownShortcutPlugin,
 	MDXEditor,
 	MDXEditorMethods,
 	quotePlugin,
 	thematicBreakPlugin,
+	toolbarPlugin,
+	UndoRedo,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import { useEffect, useRef, useState } from "react";
@@ -74,7 +81,7 @@ export default function MDEditor() {
 		<div className={`w-full h-full ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
 			{!loading && <MDXEditor
 				className="dark-theme dark-editor"
-				contentEditableClassName="text-ctp-text! h-full"
+				contentEditableClassName="text-ctp-text! h-full pt-0!"
 				markdown={content ?? ""}
 				onChange={setContent}
 				autoFocus
@@ -85,8 +92,22 @@ export default function MDEditor() {
 					listsPlugin(),
 					codeBlockPlugin(),
 					thematicBreakPlugin(),
-					codeMirrorPlugin({ codeBlockLanguages: [], codeMirrorExtensions: [catppuccinMocha] }),
+					codeMirrorPlugin({
+						codeBlockLanguages: [],
+						codeMirrorExtensions: [catppuccinMocha],
+					}),
 					markdownShortcutPlugin(),
+					toolbarPlugin({
+						toolbarClassName: "mdx-toolbar",
+						toolbarContents: () => <>
+							<UndoRedo />
+							<BoldItalicUnderlineToggles />
+							<ListsToggle />
+							<InsertThematicBreak />
+							<CodeToggle />
+							<InsertCodeBlock />
+						</>,
+					}),
 				]}
 			/>}
 		</div>

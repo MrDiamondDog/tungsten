@@ -117,11 +117,32 @@ blockquote {
 	cursor: pointer !important;
 }
 
+.mdx-toolbar {
+	background-color: var(--color-ctp-surface0) !important;
+	border-radius: 0 !important;
+	padding: 2px;
+	margin: 8px;
+	margin-bottom: 0;
+
+	* {
+		border-radius: 0 !important;
+	}
+}
+
 /* Codemirror styles. Fuck MDXEditor why are you so opionionated and hard to work with */
 
 div:has(> div > div.cm-editor) {
 	margin: 0 !important;
 	padding: 0 !important;
+	border-radius: 0;
+
+	* {
+		border-radius: 0;
+	}
+
+	span:has(> button[aria-label="Language"]) {
+		display: none;
+	}
 }
 
 .cm-editor {
