@@ -18,6 +18,19 @@ export function getTree(nodes: Node[], parentId: string | null): FileTree {
 	return tree;
 }
 
-export function getMaxIndex(files: Node[]): number {
-	return files.map(f => f.index).sort()[0];
+export function flattenTree(tree: FileTree): Node[] {
+	const treeCopy = JSON.parse(JSON.stringify(tree)) as FileTree;
+	const nodes: Node[] = [];
+
+	for (const node of treeCopy) {
+		if (node.nodeType === "file")
+			nodes.push(node);
+		else if (node.children) {
+			nodes.push(...flattenTree(node.children));
+			delete node.children;
+			nodes.push(node);
+		}
+	}
+
+	return nodes;
 }

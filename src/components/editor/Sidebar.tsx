@@ -2,9 +2,10 @@
 
 import { ChevronRight, FileIcon } from "lucide-react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
-import { MoveHandler, Tree } from "react-arborist";
-import { FileTree, getTree, TreeItem } from "@/lib/utils/data";
-import { useEffect, useState } from "react";
+import { MoveHandler, SimpleTree, Tree, TreeApi } from "react-arborist";
+import { FileTree, flattenTree, getTree, TreeItem } from "@/lib/utils/data";
+import { useEffect, useRef, useState } from "react";
+import { editNodesBulk } from "@/actions/nodes";
 
 export function SidebarFile({
 	children,
@@ -16,10 +17,10 @@ export function SidebarFile({
 	return (
 		<button
 			className={`${(selected && !folder) ? "bg-ctp-surface0" : "hover:bg-ctp-surface0"}
-		w-full text-left px-2 py-1 cursor-pointer transition-colors flex justify-between items-center`}
+		w-full text-left py-1 cursor-pointer transition-colors flex justify-between items-center`}
 			{...props}
 		>
-			<div className="flex gap-1 items-center">
+			<div className="flex gap-1 items-center px-2">
 				{folder ? (
 					<ChevronRight
 						size={18}
@@ -39,6 +40,8 @@ export default function Sidebar() {
 	const dispatch = useEditorDispatch();
 	const [tree, setTree] = useState<FileTree>();
 
+	const treeRef = useRef<TreeApi<TreeItem> | undefined>(undefined);
+
 	function onFileClick(file: string) {
 		if (!openFiles.includes(file))
 			dispatch?.({ type: "open-file", file });
@@ -48,7 +51,34 @@ export default function Sidebar() {
 
 	// eslint-disable-next-line func-style
 	const onMove: MoveHandler<TreeItem> = ({ dragIds, dragNodes, parentId, parentNode, index }) => {
-		console.log("nodes", dragNodes.map(node => node.data.name), "parent", parentNode?.data.name, index);
+		if (!tree)
+			return;
+
+		const treeData = new SimpleTree(tree);
+		for (const id of dragIds) {
+			treeData.move({ id, parentId, index });
+		}
+
+		const newTree: FileTree = treeData.data;
+
+		function updateNodes(nodes: TreeItem[], parentNode?: string) {
+			for (let i = 0; i < nodes.length; i++) {
+				const node = nodes[i];
+				node.index = i;
+				node.parentNode = parentNode ?? null;
+				if (node.nodeType === "folder") {
+					node.children = node.children ?? [];
+					updateNodes(node.children, node.id);
+				}
+			}
+		}
+
+		updateNodes(newTree);
+		setTree(newTree);
+
+		const newNodes = flattenTree(newTree);
+		dispatch?.({ type: "set-nodes", nodes: newNodes });
+		editNodesBulk(newNodes);
 	};
 
 	useEffect(() => {
@@ -57,13 +87,13 @@ export default function Sidebar() {
 
 	return (
 		<div className="w-fit min-w-60 h-full p-2 border-r border-ctp-surface0">
-			<Tree data={tree} rowHeight={36} openByDefault width="fit" onMove={onMove}>
-				{({ node, dragHandle }) => (<div ref={dragHandle} key={node.data.id}>
+			<Tree data={tree} rowHeight={36} indent={16} width="fit" ref={treeRef} onMove={onMove}>
+				{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 					{node.isLeaf ?
-						<SidebarFile onClick={() => onFileClick(node.data.id)} selected={selectedFile === node.data.id}>
+						<SidebarFile onClick={() => onFileClick(node.data.id)} selected={selectedFile === node.data.id} style={style}>
 							{node.data.name}
 						</SidebarFile> :
-						<SidebarFile folder selected={node.isOpen} onClick={() => (node.isOpen ? node.close() : node.open())}>
+						<SidebarFile folder selected={node.isOpen} onClick={() => (node.isOpen ? node.close() : node.open())} style={style}>
 							{node.data.name}
 						</SidebarFile>
 					}

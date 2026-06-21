@@ -1,6 +1,6 @@
 ## FEATURES
--[ ] Folders
--[ ] Drag and drop for sidebar
+-[x] Folders
+-[x] Drag and drop for sidebar
 -[ ] Drag and drop for tabs
 -[ ] File links
 -[ ] Markdown toolbar

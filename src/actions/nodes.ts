@@ -35,7 +35,7 @@ export async function createNode(name: string, nodeType: "file" | "folder", pare
 		.where(and(eq(nodes.userId, user.user.id!), !parentNode ? isNull(nodes.parentNode) : eq(nodes.parentNode, parentNode)));
 
 	const index = (nodeList.map(node => node.index).sort()
-		.reverse()[0] ?? 0) + 1;
+		.reverse()[0] ?? -1) + 1;
 
 	const node = await db.insert(nodes).values({
 		name,
@@ -66,9 +66,33 @@ export async function editNode(id: string, newNode: Node): ActionRes<Node> {
 	if (node.id !== newNode.id || node.userId !== node.userId)
 		return { error: "Invalid fields" };
 
-	const editedFile = (await db.update(nodes).set(newNode)
+	const editedNode = (await db.update(nodes).set(newNode)
 		.where(eq(nodes.id, id))
 		.returning())[0];
 
-	return { data: editedFile };
+	return { data: editedNode };
+}
+
+export async function editNodesBulk(newNodes: Node[]): ActionRes<Node[]> {
+	const user = await auth();
+
+	if (!user?.user)
+		return { error: "Not authenticated" };
+
+	const editedNodes = await Promise.all(newNodes.map(newNode => new Promise<Node>(async resolve => {
+		const node = (await db.select().from(nodes)
+			.where(eq(nodes.id, newNode.id)))[0];
+
+		if (!node)
+			return { error: "Not found" };
+
+		if (node.id !== newNode.id || node.userId !== newNode.userId)
+			return { error: "Invalid fields" };
+
+		resolve((await db.update(nodes).set(newNode)
+			.where(eq(nodes.id, node.id))
+			.returning())[0]);
+	})));
+
+	return { data: editedNodes };
 }
