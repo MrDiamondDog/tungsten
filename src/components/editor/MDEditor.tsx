@@ -12,7 +12,6 @@ import {
 	thematicBreakPlugin,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
-import { languages } from "@codemirror/language-data";
 import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
@@ -86,8 +85,7 @@ export default function MDEditor() {
 					listsPlugin(),
 					codeBlockPlugin(),
 					thematicBreakPlugin(),
-					codeBlockPlugin(),
-					codeMirrorPlugin({ codeBlockLanguages: languages, codeMirrorExtensions: [catppuccinMocha] }),
+					codeMirrorPlugin({ codeBlockLanguages: [], codeMirrorExtensions: [catppuccinMocha] }),
 					markdownShortcutPlugin(),
 				]}
 			/>}

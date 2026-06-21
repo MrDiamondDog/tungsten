@@ -13,7 +13,8 @@
 
 ## BUGS
 -[x] Changing tabs with unsaved content clears unsaved content
+-[x] Code blocks are SLOWWWW
 -[ ] ~~File still unsaved after returning to original content~~ (fixed in overhaul)
 -[ ] Extraneous newlines get obliterated
 -[ ] Change saving every content change to saving on intervals if it has changed
--[ ] Code blocks are SLOWWWW (potentially fixed by ^)
+-[ ] Code block language selector (remove it or fix it)
