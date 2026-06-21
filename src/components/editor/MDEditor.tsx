@@ -21,6 +21,8 @@ export default function MDEditor() {
 	const [file, setFile] = useState<Node>();
 	const [content, setContent] = useState("");
 
+	const [loading, setLoading] = useState(false);
+
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -33,9 +35,11 @@ export default function MDEditor() {
 	}, [content]);
 
 	useEffect(() => {
+		setContent("");
+		editorRef.current?.setMarkdown("");
+		setLoading(true);
 		if (!selectedFile) {
 			setFile(undefined);
-			setContent("");
 		}
 
 		const newFile = nodes.find(node => node.id === selectedFile);
@@ -46,7 +50,7 @@ export default function MDEditor() {
 
 		const newContent = cachedContent[newFile.id];
 
-		if (!newContent)
+		if (!newContent) {
 			getContent(newFile.id).then(res => {
 				if (res.error)
 					return;
@@ -54,17 +58,19 @@ export default function MDEditor() {
 				setContent(res.data!.content);
 				dispatch?.({ type: "cache-content", content: res.data!.content, nodeId: newFile.id });
 				editorRef.current?.setMarkdown(res.data!.content);
+				setLoading(false);
 			});
-		else {
+		} else {
 			setContent(newContent);
 			editorRef.current?.setMarkdown(newContent);
+			setLoading(false);
 		}
 		editorRef.current?.focus();
 	}, [selectedFile]);
 
 	return (
-		<div className="w-full h-full">
-			<MDXEditor
+		<div className={`w-full h-full ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
+			{!loading && <MDXEditor
 				contentEditableClassName="text-ctp-text! h-full"
 				markdown={content ?? ""}
 				onChange={setContent}
@@ -78,7 +84,7 @@ export default function MDEditor() {
 					thematicBreakPlugin(),
 					markdownShortcutPlugin(),
 				]}
-			/>
+			/>}
 		</div>
 	);
 }
