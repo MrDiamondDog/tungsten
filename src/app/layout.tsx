@@ -25,7 +25,7 @@ export default function RootLayout({
 			lang="en"
 			className={`${lexend.variable} h-full antialiased bg-ctp-base text-ctp-text`}
 		>
-			<body className="h-full">
+			<body className="h-full dark">
 				<SessionProvider>
 					<Suspense fallback={<Spinner />}>
 						{children}

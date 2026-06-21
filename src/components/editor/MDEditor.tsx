@@ -2,6 +2,7 @@
 
 import {
 	codeBlockPlugin,
+	codeMirrorPlugin,
 	headingsPlugin,
 	listsPlugin,
 	markdownShortcutPlugin,
@@ -11,10 +12,12 @@ import {
 	thematicBreakPlugin,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
+import { languages } from "@codemirror/language-data";
 import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
 import { editContent, getContent } from "@/actions/content";
+import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
@@ -71,6 +74,7 @@ export default function MDEditor() {
 	return (
 		<div className={`w-full h-full ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
 			{!loading && <MDXEditor
+				className="dark-theme dark-editor"
 				contentEditableClassName="text-ctp-text! h-full"
 				markdown={content ?? ""}
 				onChange={setContent}
@@ -82,6 +86,8 @@ export default function MDEditor() {
 					listsPlugin(),
 					codeBlockPlugin(),
 					thematicBreakPlugin(),
+					codeBlockPlugin(),
+					codeMirrorPlugin({ codeBlockLanguages: languages, codeMirrorExtensions: [catppuccinMocha] }),
 					markdownShortcutPlugin(),
 				]}
 			/>}

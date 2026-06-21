@@ -10,7 +10,9 @@
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.11.2",
+		"@codemirror/language-data": "^6.5.2",
 		"@dnd-kit/react": "^0.5.0",
+		"@fsegurai/codemirror-theme-bundle": "^6.4.2",
 		"@libsql/client": "^0.17.3",
 		"@mdxeditor/editor": "^4.0.3",
 		"@radix-ui/react-context-menu": "^2.3.1",
