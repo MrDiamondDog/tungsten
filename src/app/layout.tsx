@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { Suspense } from "react";
+import Spinner from "@/components/primitives/Spinner";
 
 const lexend = Lexend({
 	variable: "--font-lexend",
@@ -25,7 +27,9 @@ export default function RootLayout({
 		>
 			<body className="h-full">
 				<SessionProvider>
-					{children}
+					<Suspense fallback={<Spinner />}>
+						{children}
+					</Suspense>
 				</SessionProvider>
 
 				<div id="portal-root" />

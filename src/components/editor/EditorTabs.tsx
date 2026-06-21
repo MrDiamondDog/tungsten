@@ -1,17 +1,17 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
-import { File } from "@/db/types";
+import { Node } from "@/db/types";
 
 export default function EditorTabs() {
-	const { files, openFiles, selectedFile, unsavedFiles } = useEditor();
+	const { nodes, openFiles, selectedFile, unsavedFiles } = useEditor();
 	const dispatch = useEditorDispatch();
 
-	const [hovered, setHovered] = useState<File>();
+	const [hovered, setHovered] = useState<Node>();
 
 	return !!openFiles.length ? (
 		<div className="w-full border-b border-ctp-surface0 flex">
-			{openFiles.map(id => files.find(f => f.id === id)!).map(tab => (
+			{openFiles.map(id => nodes.find(f => f.id === id)!).map(tab => (
 				<div
 					className={`
 						${selectedFile === tab.id ? "bg-ctp-surface0" : ""}

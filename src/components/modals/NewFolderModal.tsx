@@ -8,7 +8,7 @@ import Modal, { ModalFooter, ModalProps } from "../primitives/Modal";
 import { useEditorDispatch } from "../editor/EditorContext";
 import { createNode } from "@/actions/nodes";
 
-export default function NewFileModal(props: ModalProps) {
+export default function NewFolderModal(props: ModalProps) {
 	const dispatch = useEditorDispatch();
 
 	const [name, setName] = useState("");
@@ -24,7 +24,7 @@ export default function NewFileModal(props: ModalProps) {
 
 		setLoading(true);
 
-		const res = await createNode(name, "file");
+		const res = await createNode(name, "folder");
 
 		if (res.error) {
 			setError(res.error);
@@ -38,7 +38,7 @@ export default function NewFileModal(props: ModalProps) {
 		setLoading(false);
 	}
 
-	return <Modal {...props} title="New File">
+	return <Modal {...props} title="New Folder">
 		<Divider />
 		<Input placeholder="Name" value={name} onChange={setName} />
 		<ModalFooter error={error}>

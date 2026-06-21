@@ -13,36 +13,23 @@ import {
 import "@mdxeditor/editor/style.css";
 import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
-import { File } from "@/db/types";
-import { editFile } from "@/actions/files";
+import { Node } from "@/db/types";
+import { editContent, getContent } from "@/actions/content";
 
 export default function MDEditor() {
-	const { files, selectedFile } = useEditor();
-	const [file, setFile] = useState<File>();
+	const { nodes, selectedFile, cachedContent } = useEditor();
+	const [file, setFile] = useState<Node>();
 	const [content, setContent] = useState("");
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
 
-	async function onSave() {
-		if (!file)
-			return;
-
-		setFile({ ...file, content });
-		dispatch?.({ type: "edit-file", file: { ...file, content } });
-		dispatch?.({ type: "saved-file", file: file.id });
-
-		await editFile(file.id, { ...file, content });
-	}
-
 	useEffect(() => {
-		if (!file)
+		if (!file || !content)
 			return;
 
-		if (file.content !== content)
-			dispatch?.({ type: "unsaved-file", file: file.id });
-
-		dispatch?.({ type: "edit-file", file: { ...file, content } });
+		editContent(file.id, content);
+		dispatch?.({ type: "cache-content", content, nodeId: file.id });
 	}, [content]);
 
 	useEffect(() => {
@@ -51,29 +38,32 @@ export default function MDEditor() {
 			setContent("");
 		}
 
-		const newFile = files.find(f => f.id === selectedFile);
+		const newFile = nodes.find(node => node.id === selectedFile);
 		if (!newFile)
 			return;
 
 		setFile(newFile);
-		setContent(newFile.content);
-		editorRef.current?.setMarkdown(newFile.content);
+
+		const newContent = cachedContent[newFile.id];
+
+		if (!newContent)
+			getContent(newFile.id).then(res => {
+				if (res.error)
+					return;
+
+				setContent(res.data!.content);
+				dispatch?.({ type: "cache-content", content: res.data!.content, nodeId: newFile.id });
+				editorRef.current?.setMarkdown(res.data!.content);
+			});
+		else {
+			setContent(newContent);
+			editorRef.current?.setMarkdown(newContent);
+		}
 		editorRef.current?.focus();
 	}, [selectedFile]);
 
-	function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-		if (!file)
-			return;
-
-		if (e.key === "s" && e.ctrlKey) {
-			e.preventDefault();
-			e.stopPropagation();
-			onSave();
-		}
-	}
-
 	return (
-		<div className="w-full h-full" onKeyDown={onKeyDown}>
+		<div className="w-full h-full">
 			<MDXEditor
 				contentEditableClassName="text-ctp-text! h-full"
 				markdown={content ?? ""}

@@ -12,5 +12,6 @@
 
 ## BUGS
 -[x] Changing tabs with unsaved content clears unsaved content
--[ ] File still unsaved after returning to original content
+-[ ] ~~File still unsaved after returning to original content~~ (fixed in overhaul)
 -[ ] Extraneous newlines get obliterated
+-[ ] Change saving every content change to saving on intervals if it has changed

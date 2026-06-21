@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1781570010401,
-      "tag": "0000_daily_khan",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1781638550593,
-      "tag": "0001_nosy_maginty",
+      "when": 1782004989090,
+      "tag": "0000_yummy_gwen_stacy",
       "breakpoints": true
     }
   ]
