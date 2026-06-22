@@ -12,11 +12,11 @@ const MDEditor = dynamic(() => import("@/components/editor/MDEditor"), {
 export default function TabbedEditor() {
 	const { selectedFile } = useEditor();
 
-	return (<>
+	return (<div className="w-full h-full flex">
 		<Sidebar />
-		<div className="w-full">
+		<div className="w-full h-full flex flex-col">
 			<EditorTabs />
 			{selectedFile && <MDEditor />}
 		</div>
-	</>);
+	</div>);
 }

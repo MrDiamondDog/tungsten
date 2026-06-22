@@ -109,6 +109,21 @@ blockquote {
 	--baseTextContrast: var(--color-ctp-text) !important;
 }
 
+.mdxeditor {
+	height: 100%;
+	overflow: hidden;
+}
+
+div:has(> div[contenteditable=true]) {
+	height: 100%;
+}
+
+div:has(> div > div[contenteditable=true]) {
+	/* There's no other way to make this work I swear */
+	height: 95%;
+	position: relative;
+}
+
 .mdxeditor button {
 	cursor: pointer !important;
 }

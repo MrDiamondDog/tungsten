@@ -25,26 +25,34 @@ import "@mdxeditor/editor/style.css";
 import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
-import { editContent, getContent } from "@/actions/content";
+import { getContent } from "@/actions/content";
 import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
+import { languages } from "@codemirror/language-data";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
 	const [file, setFile] = useState<Node>();
 	const [content, setContent] = useState("");
 
+	const [saveInterval, setSaveInterval] = useState<ReturnType<typeof setInterval>>();
+
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
 
-	useEffect(() => {
-		if (!file || !content)
-			return;
+	// useEffect(() => {
+	// 	if (!file || !content)
+	// 		return;
 
-		editContent(file.id, content);
-		dispatch?.({ type: "cache-content", content, nodeId: file.id });
-	}, [content]);
+	// 	clearInterval(saveInterval);
+
+	// 	setSaveInterval(setInterval(() => {
+	// 		editContent(file.id, content);
+	// 		dispatch?.({ type: "cache-content", content, nodeId: file.id });
+	// 		setSaveInterval(undefined);
+	// 	}, 3000));
+	// }, [content]);
 
 	useEffect(() => {
 		setContent("");
@@ -80,13 +88,23 @@ export default function MDEditor() {
 		editorRef.current?.focus();
 	}, [selectedFile]);
 
+	useEffect(() => {
+		function checkSaved(e: Event) {
+			if (saveInterval)
+				e.preventDefault();
+		}
+
+		window.addEventListener("beforeunload", checkSaved);
+		return () => window.removeEventListener("beforeunload", checkSaved);
+	}, []);
+
 	return (
-		<div className={`w-full h-full ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
+		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
 			{!loading && <MDXEditor
 				className="dark-theme dark-editor"
-				contentEditableClassName="text-ctp-text! h-full pt-0!"
+				contentEditableClassName="text-ctp-text! pt-0! absolute inset-0 overflow-y-scroll"
 				markdown={content ?? ""}
-				onChange={setContent}
+				// onChange={setContent}
 				autoFocus
 				ref={editorRef}
 				plugins={[
@@ -98,7 +116,7 @@ export default function MDEditor() {
 					linkPlugin(),
 					linkDialogPlugin(),
 					codeMirrorPlugin({
-						codeBlockLanguages: [],
+						codeBlockLanguages: languages,
 						codeMirrorExtensions: [catppuccinMocha],
 					}),
 					markdownShortcutPlugin(),

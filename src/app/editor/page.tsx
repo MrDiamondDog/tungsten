@@ -14,13 +14,11 @@ export default function EditorPage() {
 		return null;
 
 	return (
-		<main className="w-full h-full overflow-hidden">
+		<main className="w-full h-full flex flex-col">
 			<Suspense fallback={<Spinner className="absolute-center" />}>
 				<EditorProvider>
 					<MenuBar />
-					<div className="h-full flex">
-						<Editor />
-					</div>
+					<Editor />
 				</EditorProvider>
 			</Suspense>
 		</main>
