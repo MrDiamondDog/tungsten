@@ -45,12 +45,19 @@ export default function MDEditor() {
 	const editorRef = useRef<MDXEditorMethods>(null);
 
 	useEffect(() => {
+		if (file && editorRef.current) {
+			console.log("saving");
+			const newContent = editorRef.current.getMarkdown();
+			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
+			editContent(file.id, newContent);
+			setSaved(true);
+		}
+
 		setContent("");
 		editorRef.current?.setMarkdown("");
 		setLoading(true);
-		if (!selectedFile) {
+		if (!selectedFile)
 			setFile(undefined);
-		}
 
 		const newFile = nodes.find(node => node.id === selectedFile);
 		if (!newFile)
