@@ -71,7 +71,7 @@ hr {
 
 code,
 code span {
-	background-color: var(--color-ctp-mantle) !important;
+	background-color: var(--color-ctp-surface0) !important;
 }
 
 blockquote {
