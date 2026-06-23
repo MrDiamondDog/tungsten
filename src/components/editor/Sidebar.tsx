@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, FileIcon } from "lucide-react";
+import { FileIcon, Folder, FolderOpen } from "lucide-react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { MoveHandler, SimpleTree, Tree, TreeApi } from "react-arborist";
 import { FileTree, flattenTree, getTree, TreeItem } from "@/lib/utils/data";
@@ -22,10 +22,7 @@ export function SidebarFile({
 		>
 			<div className="flex gap-1 items-center px-2">
 				{folder ? (
-					<ChevronRight
-						size={18}
-						className={`${selected ? "rotate-90" : ""} transition-transform`}
-					/>
+					selected ? <FolderOpen size={18} /> : <Folder size={18} />
 				) : (
 					<FileIcon size={18} />
 				)}{" "}
@@ -87,7 +84,7 @@ export default function Sidebar() {
 
 	return (
 		<div className="w-fit min-w-60 h-full p-2 border-r border-ctp-surface0">
-			<Tree data={tree} rowHeight={36} indent={16} width="fit" ref={treeRef} onMove={onMove}>
+			<Tree data={tree} rowHeight={32} indent={16} width="fit" ref={treeRef} onMove={onMove}>
 				{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 					{node.isLeaf ?
 						<SidebarFile onClick={() => onFileClick(node.data.id)} selected={selectedFile === node.data.id} style={style}>
