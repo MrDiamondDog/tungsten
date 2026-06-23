@@ -25,7 +25,7 @@ import "@mdxeditor/editor/style.css";
 import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
-import { getContent } from "@/actions/content";
+import { editContent, getContent } from "@/actions/content";
 import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
 import { languages } from "@codemirror/language-data";
 
@@ -34,25 +34,13 @@ export default function MDEditor() {
 	const [file, setFile] = useState<Node>();
 	const [content, setContent] = useState("");
 
+	const [saved, setSaved] = useState(false);
 	const [saveInterval, setSaveInterval] = useState<ReturnType<typeof setInterval>>();
 
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
-
-	// useEffect(() => {
-	// 	if (!file || !content)
-	// 		return;
-
-	// 	clearInterval(saveInterval);
-
-	// 	setSaveInterval(setInterval(() => {
-	// 		editContent(file.id, content);
-	// 		dispatch?.({ type: "cache-content", content, nodeId: file.id });
-	// 		setSaveInterval(undefined);
-	// 	}, 3000));
-	// }, [content]);
 
 	useEffect(() => {
 		setContent("");
@@ -90,13 +78,37 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		function checkSaved(e: Event) {
-			if (saveInterval)
+			console.log("saved:", saved);
+			if (!saved) {
 				e.preventDefault();
+				return true;
+			}
 		}
 
 		window.addEventListener("beforeunload", checkSaved);
+
 		return () => window.removeEventListener("beforeunload", checkSaved);
-	}, []);
+	}, [saved]);
+
+	useEffect(() => {
+		function save() {
+			if (!file || !editorRef.current)
+				return;
+
+			const newContent = editorRef.current.getMarkdown();
+
+			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
+			editContent(file.id, newContent);
+			setSaved(true);
+		}
+
+		setSaveInterval(setInterval(() => save(), 5000));
+
+		return () => {
+			clearInterval(saveInterval);
+			setSaveInterval(undefined);
+		};
+	}, [file, editorRef.current]);
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
@@ -104,7 +116,7 @@ export default function MDEditor() {
 				className="dark-theme dark-editor"
 				contentEditableClassName="text-ctp-text! pt-0! absolute inset-0 overflow-y-scroll"
 				markdown={content ?? ""}
-				// onChange={setContent}
+				onChange={() => setSaved(false)}
 				autoFocus
 				ref={editorRef}
 				plugins={[
