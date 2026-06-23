@@ -46,7 +46,6 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		if (file && editorRef.current) {
-			console.log("saving");
 			const newContent = editorRef.current.getMarkdown();
 			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
 			editContent(file.id, newContent);
@@ -82,12 +81,12 @@ export default function MDEditor() {
 			editorRef.current?.setMarkdown(newContent);
 			setLoading(false);
 		}
+
 		editorRef.current?.focus();
 	}, [selectedFile]);
 
 	useEffect(() => {
 		function checkSaved(e: Event) {
-			console.log("saved:", saved);
 			if (!saved) {
 				e.preventDefault();
 				return true;
@@ -101,7 +100,7 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		function save() {
-			if (!file || !editorRef.current)
+			if (!file || !editorRef.current || file.id !== selectedFile)
 				return;
 
 			const newContent = editorRef.current.getMarkdown();
@@ -111,13 +110,13 @@ export default function MDEditor() {
 			setSaved(true);
 		}
 
-		setSaveInterval(setInterval(() => save(), 5000));
+		setSaveInterval(setInterval(save, 5000));
 
 		return () => {
 			clearInterval(saveInterval);
 			setSaveInterval(undefined);
 		};
-	}, [file, editorRef.current]);
+	}, [file, selectedFile, editorRef.current]);
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>

@@ -42,9 +42,11 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		case "close-file": {
 			const fileIndex = data.openFiles.findIndex(f => f === action.file);
 			const newOpenFiles = [...data.openFiles.slice(0, fileIndex), ...data.openFiles.slice(fileIndex + 1)];
-			if (action.file === data.selectedFile)
-				data.selectedFile = newOpenFiles[0] ?? undefined;
-			return { ...data, openFiles: newOpenFiles };
+			return {
+				...data,
+				selectedFile: action.file === data.selectedFile ? (newOpenFiles[0] ?? undefined) : data.selectedFile,
+				openFiles: newOpenFiles,
+			};
 		}
 		case "set-nodes": {
 			return { ...data, nodes: action.nodes };

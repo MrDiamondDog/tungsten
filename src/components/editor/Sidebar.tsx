@@ -83,7 +83,7 @@ export default function Sidebar() {
 	}, [nodes]);
 
 	return (
-		<div className="w-fit min-w-60 h-full p-2 border-r border-ctp-surface0">
+		<div className="w-fit min-w-75 h-full p-2 border-r border-ctp-surface0">
 			<Tree data={tree} rowHeight={32} indent={16} width="fit" ref={treeRef} onMove={onMove}>
 				{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 					{node.isLeaf ?
