@@ -2,9 +2,11 @@
 
 import {
 	BoldItalicUnderlineToggles,
+	ChangeCodeMirrorLanguage,
 	codeBlockPlugin,
 	codeMirrorPlugin,
 	CodeToggle,
+	ConditionalContents,
 	CreateLink,
 	headingsPlugin,
 	InsertCodeBlock,
@@ -141,7 +143,12 @@ export default function MDEditor() {
 							<CreateLink />
 							<InsertThematicBreak />
 							<CodeToggle />
-							<InsertCodeBlock />
+							<ConditionalContents
+								options={[
+									{ when: editor => editor?.editorType === "codeblock", contents: () => <ChangeCodeMirrorLanguage /> },
+									{ fallback: () => <InsertCodeBlock /> },
+								]}
+							/>
 						</>,
 					}),
 				]}
