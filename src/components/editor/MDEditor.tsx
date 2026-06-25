@@ -35,8 +35,9 @@ export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
 	const [file, setFile] = useState<Node>();
 	const [content, setContent] = useState("");
+	const oldContent = useRef("");
 
-	const [saved, setSaved] = useState(false);
+	const [saved, setSaved] = useState(true);
 	const [saveInterval, setSaveInterval] = useState<ReturnType<typeof setInterval>>();
 
 	const [loading, setLoading] = useState(false);
@@ -105,18 +106,24 @@ export default function MDEditor() {
 
 			const newContent = editorRef.current.getMarkdown();
 
+			if (newContent === oldContent.current)
+				return void setSaved(true);
+
+			oldContent.current = newContent;
+
 			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
 			editContent(file.id, newContent);
 			setSaved(true);
 		}
 
-		setSaveInterval(setInterval(save, 5000));
+		if (!saveInterval)
+			setSaveInterval(setInterval(save, 5000));
 
 		return () => {
 			clearInterval(saveInterval);
 			setSaveInterval(undefined);
 		};
-	}, [file, selectedFile, editorRef.current]);
+	}, [file, selectedFile, oldContent.current, editorRef.current]);
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
