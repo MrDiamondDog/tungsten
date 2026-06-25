@@ -31,7 +31,18 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		}
 		case "delete-node": {
 			const nodeIndex = data.nodes.findIndex(f => f.id === action.node.id);
-			return { ...data, nodes: [...data.nodes.slice(0, nodeIndex), ...data.nodes.slice(nodeIndex + 1)] };
+
+			if (data.openFiles.includes(action.node.id)) {
+				const openFilesIndex = data.openFiles.findIndex(f => f === action.node.id);
+				data.openFiles = [...data.openFiles.slice(0, openFilesIndex), ...data.openFiles.slice(openFilesIndex + 1)];
+			}
+			if (data.selectedFile === action.node.id)
+				data.selectedFile = undefined;
+
+			return {
+				...data,
+				nodes: [...data.nodes.slice(0, nodeIndex), ...data.nodes.slice(nodeIndex + 1)],
+			};
 		}
 		case "select-file": {
 			return { ...data, selectedFile: action.file };
@@ -40,8 +51,8 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 			return { ...data, openFiles: [...data.openFiles, action.file] };
 		}
 		case "close-file": {
-			const fileIndex = data.openFiles.findIndex(f => f === action.file);
-			const newOpenFiles = [...data.openFiles.slice(0, fileIndex), ...data.openFiles.slice(fileIndex + 1)];
+			const nodeIndex = data.openFiles.findIndex(f => f === action.file);
+			const newOpenFiles = [...data.openFiles.slice(0, nodeIndex), ...data.openFiles.slice(nodeIndex + 1)];
 			return {
 				...data,
 				selectedFile: action.file === data.selectedFile ? (newOpenFiles[0] ?? undefined) : data.selectedFile,

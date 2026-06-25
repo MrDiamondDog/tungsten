@@ -21,10 +21,10 @@ export const nodes = sqliteTable("node", {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	userId: text("userId")
-		.references(() => users.id)
+		.references(() => users.id, { onDelete: "cascade" })
 		.notNull(),
 	nodeType: text("nodeType", { enum: ["file", "folder"] }).notNull(),
-	parentNode: text("parentNode").references((): AnySQLiteColumn => nodes.id),
+	parentNode: text("parentNode").references((): AnySQLiteColumn => nodes.id, { onDelete: "cascade" }),
 	index: integer("index").notNull(),
 	name: text("name").notNull(),
 });
@@ -37,7 +37,7 @@ export const fileContents = sqliteTable("fileContent", {
 		.references(() => users.id)
 		.notNull(),
 	nodeId: text("nodeId")
-		.references(() => nodes.id)
+		.references(() => nodes.id, { onDelete: "cascade" })
 		.notNull(),
 	content: text("content").notNull(),
 });

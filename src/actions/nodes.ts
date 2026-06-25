@@ -18,29 +18,29 @@ export async function getNodes(): ActionRes<Node[]> {
 	return { data: nodeList };
 }
 
-export async function createNode(name: string, nodeType: "file" | "folder", parentNode?: string): ActionRes<Node> {
+export async function createNode(data: Omit<Node, "id" | "userId" | "index">, index?: number): ActionRes<Node> {
 	const user = await auth();
 
 	if (!user?.user)
 		return { error: "Not authenticated" };
 
-	if (!name)
+	if (!data.name)
 		return { error: "Please fill out all fields" };
 
-	if (nodeType !== "file" && nodeType !== "folder") {
+	if (data.nodeType !== "file" && data.nodeType !== "folder") {
 		return { error: "Invalid node type." };
 	}
 
-	const nodeList = await db.select().from(nodes)
-		.where(and(eq(nodes.userId, user.user.id!), !parentNode ? isNull(nodes.parentNode) : eq(nodes.parentNode, parentNode)));
+	if (!index) {
+		const nodeList = await db.select().from(nodes)
+			.where(and(eq(nodes.userId, user.user.id!), !data.parentNode ? isNull(nodes.parentNode) : eq(nodes.parentNode, data.parentNode)));
 
-	const index = (nodeList.map(node => node.index).sort()
-		.reverse()[0] ?? -1) + 1;
+		index = (nodeList.map(node => node.index).sort()
+			.reverse()[0] ?? -1) + 1;
+	}
 
 	const node = await db.insert(nodes).values({
-		name,
-		nodeType,
-		parentNode,
+		...data,
 		index,
 		userId: user.user.id!,
 	})
@@ -95,4 +95,24 @@ export async function editNodesBulk(newNodes: Node[]): ActionRes<Node[]> {
 	})));
 
 	return { data: editedNodes };
+}
+
+export async function deleteNode(id: string): ActionRes<void> {
+	const user = await auth();
+
+	if (!user?.user)
+		return { error: "Not authenticated" };
+
+	const node = (await db.select().from(nodes)
+		.where(eq(nodes.id, id)))[0];
+
+	if (!node)
+		return { error: "Not found" };
+
+	if (node.userId !== node.userId)
+		return { error: "Invalid fields" };
+
+	await db.delete(nodes).where(eq(nodes.id, id));
+
+	return {};
 }

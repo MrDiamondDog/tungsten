@@ -27,7 +27,7 @@ export function ContextMenuTrigger(props: ContextMenuTriggerProps) {
 export function ContextMenuContent(props: ContextMenuContentProps) {
 	return (<ContextMenuPortal>
 		<_ContextMenuContent {...props}
-			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-40 shadow-md`}>
+			className={`${props.className && ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-40 shadow-md z-10`}>
 			{props.children}
 		</_ContextMenuContent>
 	</ContextMenuPortal>);

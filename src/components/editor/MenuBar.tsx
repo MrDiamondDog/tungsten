@@ -29,9 +29,6 @@ export default function MenuBar() {
 				<DropdownItem onClick={() => setOpenModal("new-file")}>New File</DropdownItem>
 				<DropdownItem onClick={() => setOpenModal("new-folder")}>New Folder</DropdownItem>
 				<DropdownSeparator />
-				<DropdownItem>Save</DropdownItem>
-				<DropdownItem>Save As</DropdownItem>
-				<DropdownSeparator />
 				<DropdownItem>Import</DropdownItem>
 				<DropdownItem>Export</DropdownItem>
 			</MenuBarItem>
