@@ -30,8 +30,9 @@ export function InsertMathButton() {
 			kind: "text",
 			props: { value: "" },
 		})}
+		className="font-[KaTeX\_Math]! italic! text-2xl! py-0! px-2!"
 	>
-		Math
+		x
 	</Button>;
 }
 
