@@ -2,6 +2,7 @@
 
 import {
 	BoldItalicUnderlineToggles,
+	Button,
 	ChangeCodeMirrorLanguage,
 	codeBlockPlugin,
 	codeMirrorPlugin,
@@ -142,7 +143,7 @@ export default function MDEditor() {
 				className="dark-theme dark-editor"
 				contentEditableClassName="text-ctp-text! pt-0! absolute inset-0 overflow-y-scroll"
 				markdown={content ?? ""}
-				onChange={() => setSaved(false)}
+				onChange={v => setSaved(false)}
 				autoFocus
 				ref={editorRef}
 				plugins={[
@@ -166,21 +167,26 @@ export default function MDEditor() {
 					markdownShortcutPlugin(),
 					toolbarPlugin({
 						toolbarClassName: "mdx-toolbar",
-						toolbarContents: () => <>
-							<UndoRedo />
-							<BoldItalicUnderlineToggles />
-							<ListsToggle />
-							<CreateLink />
-							<InsertThematicBreak />
-							<CodeToggle />
-							<ConditionalContents
-								options={[
-									{ when: editor => editor?.editorType === "codeblock", contents: () => <ChangeCodeMirrorLanguage /> },
-									{ fallback: () => <InsertCodeBlock /> },
-								]}
-							/>
-							<InsertMathButton />
-						</>,
+						toolbarContents: () => <div className="flex w-full justify-between items-center">
+							<div className="flex">
+								<UndoRedo />
+								<BoldItalicUnderlineToggles />
+								<ListsToggle />
+								<CreateLink />
+								<InsertThematicBreak />
+								<CodeToggle />
+								<ConditionalContents
+									options={[
+										{ when: editor => editor?.editorType === "codeblock", contents: () => <ChangeCodeMirrorLanguage /> },
+										{ fallback: () => <InsertCodeBlock /> },
+									]}
+								/>
+								<InsertMathButton />
+							</div>
+							<div>
+								<Button>Raw</Button>
+							</div>
+						</div>,
 					}),
 				]}
 			/>}

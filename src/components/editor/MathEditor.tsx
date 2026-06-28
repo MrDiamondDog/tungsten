@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, insertJsx$, JsxComponentDescriptor, usePublisher } from "@mdxeditor/editor";
+import { Button, insertJsx$, JsxComponentDescriptor, useMdastNodeUpdater, usePublisher } from "@mdxeditor/editor";
 import { MathfieldElement, renderMathInDocument } from "mathlive";
 import { useEffect, useRef } from "react";
 
@@ -16,9 +16,13 @@ export const mathEditorDescriptor: JsxComponentDescriptor = {
 	name: "MathEditor",
 	kind: "text",
 	props: [{ type: "string", name: "value" }],
-	Editor: ({ mdastNode }) => <MathEditor value={mdastNode.attributes[0].value as string ?? ""} onChange={v => {
-		mdastNode.attributes[0].value = v;
-	}} />,
+	Editor: ({ mdastNode }) => {
+		const updateMdastNode = useMdastNodeUpdater();
+		return <MathEditor
+			value={mdastNode.attributes[0].value as string ?? ""}
+			onChange={v => updateMdastNode({ attributes: [{ ...mdastNode.attributes[0], value: v }] })}
+		/>;
+	},
 };
 
 export function InsertMathButton() {
