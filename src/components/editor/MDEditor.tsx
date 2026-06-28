@@ -9,6 +9,7 @@ import {
 	ConditionalContents,
 	CreateLink,
 	headingsPlugin,
+	imagePlugin,
 	InsertCodeBlock,
 	InsertThematicBreak,
 	jsxPlugin,
@@ -33,6 +34,8 @@ import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
 import { languages } from "@codemirror/language-data";
 import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
 import { MathfieldElement } from "mathlive";
+import uploadImage from "@/actions/images";
+import Spinner from "../primitives/Spinner";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
@@ -150,6 +153,11 @@ export default function MDEditor() {
 					thematicBreakPlugin(),
 					linkPlugin(),
 					linkDialogPlugin(),
+					imagePlugin({
+						imageUploadHandler: async file => (await uploadImage(file)).data!,
+						disableImageSettingsButton: true,
+						imagePlaceholder: () => <Spinner className="size-30 p-10 bg-ctp-surface0" />,
+					}),
 					codeMirrorPlugin({
 						codeBlockLanguages: languages,
 						codeMirrorExtensions: [catppuccinMocha],

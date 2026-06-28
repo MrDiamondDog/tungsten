@@ -41,3 +41,11 @@ export const fileContents = sqliteTable("fileContent", {
 		.notNull(),
 	content: text("content").notNull(),
 });
+
+export const images = sqliteTable("image", {
+	fileName: text("fileName").primaryKey()
+		.notNull(),
+	userId: text("userId")
+		.references(() => users.id)
+		.notNull(),
+});

@@ -165,6 +165,10 @@ svg[class*=_popoverArrow] {
 	}
 }
 
+[data-editor-block-type="image"] div:has(> button) {
+	display: none;
+}
+
 /* Codemirror styles. Fuck MDXEditor why are you so opionionated and hard to work with */
 
 div:has(> div > div.cm-editor) {
