@@ -1,5 +1,6 @@
 "use client";
 
+import { RealmProvider } from "@mdxeditor/editor";
 import EditorTabs from "./EditorTabs";
 import Sidebar from "./Sidebar";
 import dynamic from "next/dynamic";
@@ -13,7 +14,9 @@ export default function TabbedEditor() {
 		<Sidebar />
 		<div className="w-full h-full flex flex-col">
 			<EditorTabs />
-			<MDEditor />
+			<RealmProvider>
+				<MDEditor />
+			</RealmProvider>
 		</div>
 	</div>);
 }

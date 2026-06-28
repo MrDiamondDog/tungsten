@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css");
 @import "tailwindcss";
 
 @import "@catppuccin/tailwindcss/mocha.css";
@@ -205,4 +206,31 @@ div:has(> div > div.cm-editor) {
 
 .cm-gutterElement {
 	font-size: 13px;
+}
+
+/* Math editor */
+math-field {
+	background-color: transparent;
+	color: var(--color-ctp-text);
+	outline: none;
+	font-size: 1.2em;
+	border-radius: 0;
+
+	--primary: var(--color-ctp-blue-500);
+	--caret-color: var(--color-ctp-text);
+	--selection-color: var(--color-ctp-base);
+	--selection-background-color: var(--color-ctp-surface0);
+	--contains-highlight-background-color: var(--color-ctp-surface0);
+
+	&:focus {
+		outline: 1px solid var(--color-ctp-surface0);
+	}
+
+	&::part(virtual-keyboard-toggle) {
+		display: none;
+	}
+
+	&::part(menu-toggle) {
+		display: none;
+	}
 }

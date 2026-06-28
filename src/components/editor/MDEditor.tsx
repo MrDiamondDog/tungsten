@@ -11,6 +11,7 @@ import {
 	headingsPlugin,
 	InsertCodeBlock,
 	InsertThematicBreak,
+	jsxPlugin,
 	linkDialogPlugin,
 	linkPlugin,
 	listsPlugin,
@@ -30,6 +31,8 @@ import { Node } from "@/db/types";
 import { editContent, getContent } from "@/actions/content";
 import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
 import { languages } from "@codemirror/language-data";
+import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
+import { MathfieldElement } from "mathlive";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
@@ -44,6 +47,11 @@ export default function MDEditor() {
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
+
+	useEffect(() => {
+		MathfieldElement.soundsDirectory = null;
+		MathfieldElement.fontsDirectory = null;
+	}, []);
 
 	useEffect(() => {
 		if (file && editorRef.current) {
@@ -146,6 +154,7 @@ export default function MDEditor() {
 						codeBlockLanguages: languages,
 						codeMirrorExtensions: [catppuccinMocha],
 					}),
+					jsxPlugin({ jsxComponentDescriptors: [mathEditorDescriptor] }),
 					markdownShortcutPlugin(),
 					toolbarPlugin({
 						toolbarClassName: "mdx-toolbar",
@@ -162,6 +171,7 @@ export default function MDEditor() {
 									{ fallback: () => <InsertCodeBlock /> },
 								]}
 							/>
+							<InsertMathButton />
 						</>,
 					}),
 				]}

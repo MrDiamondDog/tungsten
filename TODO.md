@@ -3,9 +3,11 @@
 -[x] Drag and drop for sidebar
 -[x] Drag and drop for tabs
 -[x] Links
--[ ] Sidebar context menus
+-[x] Sidebar context menus
 -[x] Markdown toolbar
 -[x] Highlighted code blocks
+-[x] Math block
+-[ ] Images
 -[ ] Links between pages
 -[ ] Export files as HTML or Markdown
 -[ ] Export whole database/folders
@@ -20,5 +22,7 @@
 -[x] Editor scrolling issues
 -[x] Change saving every content change to saving on intervals if it has changed
 -[x] Code block language selector
+-[x] When renaming a file, if it is the open tab, whenever it autosaves it will reset the rename input cause it rerenders :sob:
 -[ ] Extraneous newlines get obliterated
--[ ] When renaming a file, if it is the open tab, whenever it autosaves it will reset the rename input cause it rerenders :sob:
+-[ ] Can't focus math editor without clicking in (similarly, can't unfocus)
+-[ ] Editor doesn't autosave when only math editor has been changed
