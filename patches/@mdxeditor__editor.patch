@@ -1,0 +1,15 @@
+diff --git a/dist/plugins/image/ImageResizer.js b/dist/plugins/image/ImageResizer.js
+index fd06ccbd272ee0ef9a6bcb2e47aa40e8756a68fd..dc94d018c01fb756fe3cd21aaaf6dfd581b43c72 100644
+--- a/dist/plugins/image/ImageResizer.js
++++ b/dist/plugins/image/ImageResizer.js
+@@ -37,8 +37,8 @@ function ImageResizer({
+   const editorRootElement = editor.getRootElement();
+   const maxWidthContainer = maxWidth ?? (editorRootElement !== null ? editorRootElement.getBoundingClientRect().width - 20 : 100);
+   const maxHeightContainer = editorRootElement !== null ? editorRootElement.getBoundingClientRect().height - 20 : 100;
+-  const minWidth = 100;
+-  const minHeight = 100;
++  const minWidth = 10;
++  const minHeight = 10;
+   const setStartCursor = (direction) => {
+     const ew = direction === Direction.east || direction === Direction.west;
+     const ns = direction === Direction.north || direction === Direction.south;

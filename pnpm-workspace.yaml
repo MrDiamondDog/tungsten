@@ -6,3 +6,5 @@ allowBuilds:
   unrs-resolver: true
 onlyBuiltDependencies:
   - sqlite3
+patchedDependencies:
+  '@mdxeditor/editor': patches/@mdxeditor__editor.patch
