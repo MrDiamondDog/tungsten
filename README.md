@@ -9,10 +9,10 @@ Built for Hack Club's [Stardance](https://stardance.hackclub.com)
 ## Features
 
 - WYSIWYG Markdown editor
-- File/folder organization
-- Basic email/password authentication
 - Links between files
-- Tabbed editor (work on multiple files at once)
+- Math editing
+- Images
+- Custom emojis
 - Template files
 - Export files as HTML or Markdown
 - Import Obsidian vaults

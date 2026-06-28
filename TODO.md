@@ -7,7 +7,8 @@
 -[x] Markdown toolbar
 -[x] Highlighted code blocks
 -[x] Math block
--[ ] Images
+-[x] Images
+-[ ] Custom emojis
 -[ ] Links between pages
 -[ ] Export files as HTML or Markdown
 -[ ] Export whole database/folders
