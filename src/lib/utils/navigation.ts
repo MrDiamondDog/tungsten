@@ -5,7 +5,7 @@ export function getFileUrl(node: Node, nodes: Node[]) {
 	const path: Node[] = [node];
 
 	while (path[0]?.parentNode !== null) {
-		const last = path[path.length - 1];
+		const last = path[0];
 		path.unshift(nodes.find(node => node.id === last.parentNode)!);
 	}
 
