@@ -86,7 +86,7 @@ export default function MDEditor() {
 
 		const newContent = cachedContent[newFile.id];
 
-		if (!newContent) {
+		if (newContent === null || newContent === undefined) {
 			getContent(newFile.id).then(res => {
 				if (res.error)
 					return;
