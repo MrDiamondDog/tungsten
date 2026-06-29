@@ -12,6 +12,7 @@ import {
 	headingsPlugin,
 	imagePlugin,
 	InsertCodeBlock,
+	InsertTable,
 	InsertThematicBreak,
 	jsxPlugin,
 	linkDialogPlugin,
@@ -22,6 +23,7 @@ import {
 	MDXEditor,
 	MDXEditorMethods,
 	quotePlugin,
+	tablePlugin,
 	thematicBreakPlugin,
 	toolbarPlugin,
 	UndoRedo,
@@ -180,6 +182,7 @@ export default function MDEditor() {
 						codeBlockLanguages: languages,
 						codeMirrorExtensions: [catppuccinMocha],
 					}),
+					tablePlugin(),
 					jsxPlugin({ jsxComponentDescriptors: [mathEditorDescriptor] }),
 					markdownShortcutPlugin(),
 					toolbarPlugin({
@@ -191,6 +194,7 @@ export default function MDEditor() {
 								<ListsToggle />
 								<CreateLink />
 								<InsertThematicBreak />
+								<InsertTable />
 								<CodeToggle />
 								<ConditionalContents
 									options={[
