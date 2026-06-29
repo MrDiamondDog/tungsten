@@ -12,7 +12,31 @@ const lexend = Lexend({
 
 export const metadata: Metadata = {
 	title: "Tungsten",
-	description: "Cool",
+	description: "Self-hostable Obsidian alternative.",
+	icons: [
+		{
+			url: "/tungsten-96.png",
+			sizes: "96x96",
+			type: "image/png",
+		},
+		{
+			url: "/tungsten.svg",
+			type: "image/svg+xml",
+		},
+		{
+			url: "/tungsten.ico",
+			rel: "shortcut icon",
+		},
+		{
+			url: "/apple-touch-icon.png",
+			rel: "apple-touch-icon",
+			sizes: "180x180",
+		},
+	],
+	applicationName: "Tungsten",
+	appleWebApp: {
+		capable: false,
+	},
 };
 
 export default function RootLayout({
