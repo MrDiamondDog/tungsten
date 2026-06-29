@@ -1,4 +1,4 @@
-import { openFile } from "@/lib/utils/navigation";
+import { getFileUrl } from "@/lib/utils/navigation";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
 import { DragDropProvider } from "@dnd-kit/react";
@@ -22,7 +22,7 @@ export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 			${selectedFile === tab.id ? "bg-ctp-surface0" : ""}
 			hover:bg-ctp-surface0 pl-4 pr-1 py-2 cursor-pointer transition-colors flex gap-1 items-center border-r border-ctp-surface0
 		`}
-		onClick={() => router.push(openFile(tab, nodes))}
+		onClick={() => router.push(getFileUrl(tab, nodes))}
 		onMouseOver={() => setHovered(true)}
 		onMouseLeave={() => setHovered(false)}
 		ref={ref}

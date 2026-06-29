@@ -37,6 +37,9 @@ import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
 import { MathfieldElement } from "mathlive";
 import uploadImage from "@/actions/images";
 import Spinner from "../primitives/Spinner";
+import { useRouter } from "next/navigation";
+import { getAllFilePaths } from "@/lib/utils/navigation";
+import { getTree } from "@/lib/utils/data";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent } = useEditor();
@@ -51,6 +54,8 @@ export default function MDEditor() {
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
+
+	const router = useRouter();
 
 	useEffect(() => {
 		MathfieldElement.soundsDirectory = null;
@@ -72,7 +77,7 @@ export default function MDEditor() {
 			setFile(undefined);
 
 		const newFile = nodes.find(node => node.id === selectedFile);
-		if (!newFile)
+		if (!newFile || newFile.nodeType === "folder")
 			return;
 
 		setFile(newFile);
@@ -156,7 +161,16 @@ export default function MDEditor() {
 					codeBlockPlugin(),
 					thematicBreakPlugin(),
 					linkPlugin(),
-					linkDialogPlugin(),
+					linkDialogPlugin({
+						linkAutocompleteSuggestions: getAllFilePaths(getTree(nodes)),
+						onClickLinkCallback: (link: string) => {
+							if (link.startsWith("http"))
+								return void window.open(link);
+							if (link.startsWith("/"))
+								link = `/editor${link}`;
+							router.push(link);
+						},
+					}),
 					imagePlugin({
 						imageUploadHandler: async file => (await uploadImage(file)).data!,
 						disableImageSettingsButton: true,

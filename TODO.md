@@ -8,8 +8,10 @@
 -[x] Highlighted code blocks
 -[x] Math block
 -[x] Images
+-[x] Links between pages
+-[ ] Tables
 -[ ] Custom emojis
--[ ] Links between pages
+-[ ] Wikilinks?
 -[ ] Export files as HTML or Markdown
 -[ ] Export whole database/folders
 -[ ] Import whole database/folders

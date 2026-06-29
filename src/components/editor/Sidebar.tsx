@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { createNode, deleteNode, editNode, editNodesBulk } from "@/actions/nodes";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../primitives/ContextMenu";
 import Input from "../primitives/Input";
-import { openFile } from "@/lib/utils/navigation";
+import { getFileUrl } from "@/lib/utils/navigation";
 import { useRouter } from "next/navigation";
 import { Node } from "@/db/types";
 
@@ -102,7 +102,7 @@ export default function Sidebar() {
 		// 	dispatch?.({ type: "open-file", file });
 
 		// dispatch?.({ type: "select-file", file });
-		router.push(openFile(file, nodes));
+		router.push(getFileUrl(file, nodes));
 	}
 
 	// eslint-disable-next-line func-style

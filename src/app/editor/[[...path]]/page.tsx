@@ -27,10 +27,13 @@ export default function EditorPage({ params }: PageProps<"/editor/[[...path]]">)
 			if (currentNode?.nodeType === "file")
 				break;
 		}
-		if (!currentNode || currentNode.id === selectedFile)
+
+		if (!currentNode || currentNode.nodeType === "folder")
+			return void dispatch?.({ type: "select-file" });
+
+		if (currentNode.id === selectedFile)
 			return;
 
-		console.log(openFiles);
 		if (openFiles.includes(currentNode.id))
 			dispatch?.({ type: "select-file", file: currentNode.id });
 		else {
