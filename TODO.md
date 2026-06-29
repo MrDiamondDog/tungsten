@@ -9,7 +9,7 @@
 -[x] Math block
 -[x] Images
 -[x] Links between pages
--[ ] Tables
+-[x] Tables
 -[ ] Custom emojis
 -[ ] Wikilinks?
 -[ ] Export files as HTML or Markdown

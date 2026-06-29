@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { createNode } from "@/actions/nodes";
 import { Dropdown, DropdownContent, DropdownItem, DropdownSeparator, DropdownTrigger } from "../primitives/Dropdown";
-import NewFileModal from "../modals/NewFileModal";
-import NewFolderModal from "../modals/NewFolderModal";
+import { signOut } from "next-auth/react";
+import { useEditorDispatch } from "./EditorContext";
 
-export function MenuBarItem({ name, ...props }: { name: string } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function MenuBarItem({ trigger, ...props }: { trigger: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return <Dropdown>
 		<DropdownTrigger asChild>
 			<button {...props}
-				className={`${props.className ?? ""} outline-none px-2 py-1 hover:bg-ctp-surface0
-					transition-colors cursor-pointer`}>
-				{name}
+				className={`outline-none px-2 py-1 hover:bg-ctp-surface0
+					transition-colors cursor-pointer ${props.className ?? ""}`}>
+				{trigger}
 			</button>
 		</DropdownTrigger>
 		<DropdownContent>
@@ -21,22 +21,40 @@ export function MenuBarItem({ name, ...props }: { name: string } & React.ButtonH
 }
 
 export default function MenuBar() {
-	const [openModal, setOpenModal] = useState("");
+	const dispatch = useEditorDispatch();
+
+	async function onCreate(type: "folder" | "file") {
+		const nodeData = {
+			parentNode: null,
+			nodeType: type,
+			name: `New ${type === "file" ? "File" : "Folder"}`,
+		};
+
+		const newNode = await createNode(nodeData).then(res => {
+			if (res.error)
+				throw res.error;
+
+			return res.data!;
+		});
+
+		dispatch?.({ type: "create-node", node: newNode });
+	}
 
 	return (<>
 		<div className="w-full p-1 border-b border-ctp-surface0 flex gap-1 items-center">
-			<MenuBarItem name="File">
-				<DropdownItem onClick={() => setOpenModal("new-file")}>New File</DropdownItem>
-				<DropdownItem onClick={() => setOpenModal("new-folder")}>New Folder</DropdownItem>
+			<MenuBarItem trigger={<img src="/tungsten.svg" width={32} height={32} />} className="px-1! py-0!">
+				<DropdownItem onClick={() => signOut({ redirectTo: "/" })}>Log Out</DropdownItem>
+			</MenuBarItem>
+			<MenuBarItem trigger="File">
+				<DropdownItem onClick={() => onCreate("file")}>New File</DropdownItem>
+				<DropdownItem onClick={() => onCreate("folder")}>New Folder</DropdownItem>
 				<DropdownSeparator />
 				<DropdownItem>Import</DropdownItem>
 				<DropdownItem>Export</DropdownItem>
 			</MenuBarItem>
-			<MenuBarItem name="Edit">
+			<MenuBarItem trigger="Edit">
 				<DropdownItem>Preferences</DropdownItem>
 			</MenuBarItem>
 		</div>
-		<NewFileModal open={openModal === "new-file"} onClose={() => setOpenModal("")} />
-		<NewFolderModal open={openModal === "new-folder"} onClose={() => setOpenModal("")} />
 	</>);
 }

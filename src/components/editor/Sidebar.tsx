@@ -4,7 +4,7 @@ import { FileIcon, Folder, FolderOpen } from "lucide-react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { CreateHandler, MoveHandler, RenameHandler, SimpleTree, Tree, TreeApi } from "react-arborist";
 import { FileTree, flattenTree, getTree, TreeItem } from "@/lib/utils/data";
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { createNode, deleteNode, editNode, editNodesBulk } from "@/actions/nodes";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../primitives/ContextMenu";
 import Input from "../primitives/Input";
@@ -17,12 +17,14 @@ export function SidebarFile({
 	isFolder,
 	selected,
 	onEdit,
+	treeRef,
 	...props
 }: {
 	data: TreeItem,
 	selected?: boolean,
 	isFolder?: boolean,
 	onEdit?: () => void,
+	treeRef: RefObject<TreeApi<TreeItem> | undefined>,
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	const dispatch = useEditorDispatch();
 
@@ -51,8 +53,8 @@ export function SidebarFile({
 			</ContextMenuTrigger>
 			<ContextMenuContent>
 				{isFolder && <>
-					<ContextMenuItem>New File</ContextMenuItem>
-					<ContextMenuItem>New Folder</ContextMenuItem>
+					<ContextMenuItem onClick={() => treeRef.current?.create({ type: "leaf", parentId: data.id })}>New File</ContextMenuItem>
+					<ContextMenuItem onClick={() => treeRef.current?.create({ type: "internal", parentId: data.id })}>New Folder</ContextMenuItem>
 					<ContextMenuSeparator />
 				</>}
 				<ContextMenuItem onClick={onEdit}>Rename</ContextMenuItem>
@@ -89,7 +91,7 @@ export function SidebarFileEdit({ initialName, onEditFinish, isFolder }: {
 }
 
 export default function Sidebar() {
-	const { nodes, openFiles, selectedFile } = useEditor();
+	const { nodes, selectedFile } = useEditor();
 	const dispatch = useEditorDispatch();
 	const [tree, setTree] = useState<FileTree>();
 
@@ -98,10 +100,6 @@ export default function Sidebar() {
 	const router = useRouter();
 
 	function onFileClick(file: Node) {
-		// if (!openFiles.includes(file))
-		// 	dispatch?.({ type: "open-file", file });
-
-		// dispatch?.({ type: "select-file", file });
 		router.push(getFileUrl(file, nodes));
 	}
 
@@ -182,6 +180,7 @@ export default function Sidebar() {
 									style={style}
 									onEdit={() => node.edit()}
 									data={node.data}
+									treeRef={treeRef}
 								/> :
 								<SidebarFile
 									isFolder
@@ -190,6 +189,7 @@ export default function Sidebar() {
 									style={style}
 									onEdit={() => node.edit()}
 									data={node.data}
+									treeRef={treeRef}
 								/>
 							)}
 							{node.isEditing && <SidebarFileEdit
@@ -202,8 +202,8 @@ export default function Sidebar() {
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>
-				<ContextMenuItem onClick={() => treeRef.current?.create({ type: "leaf" })}>New File</ContextMenuItem>
-				<ContextMenuItem onClick={() => treeRef.current?.create({ type: "internal" })}>New Folder</ContextMenuItem>
+				<ContextMenuItem onClick={() => treeRef.current?.create({ type: "leaf", parentId: null })}>New File</ContextMenuItem>
+				<ContextMenuItem onClick={() => treeRef.current?.create({ type: "internal", parentId: null })}>New Folder</ContextMenuItem>
 			</ContextMenuContent>
 		</ContextMenu>
 	);
