@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { EditorProvider } from "@/components/editor/EditorContext";
 import { redirect } from "next/navigation";
 
 export default async function EditorLayout({
@@ -11,5 +12,7 @@ export default async function EditorLayout({
 	if (!session)
 		return redirect("/");
 
-	return (children);
+	return <EditorProvider>
+		{children}
+	</EditorProvider>;
 }

@@ -24,6 +24,7 @@
 -[x] Change saving every content change to saving on intervals if it has changed
 -[x] Code block language selector
 -[x] When renaming a file, if it is the open tab, whenever it autosaves it will reset the rename input cause it rerenders :sob:
+-[x] Editor doesn't autosave when only math editor has been changed
 -[ ] Extraneous newlines get obliterated
 -[ ] Can't focus math editor without clicking in (similarly, can't unfocus)
--[ ] Editor doesn't autosave when only math editor has been changed
+-[ ] Lag when switching tabs

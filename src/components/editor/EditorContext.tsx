@@ -1,3 +1,5 @@
+"use client";
+
 import { getNodes } from "@/actions/nodes";
 import { Node } from "@/db/types";
 import { ActionDispatch, createContext, useContext, useEffect, useReducer } from "react";
@@ -18,6 +20,7 @@ export type EditorAction =
 	{ type: "select-file", file?: string } |
 	{ type: "open-file", file: string } |
 	{ type: "close-file", file: string } |
+	{ type: "set-open-files", openFiles: string[] } |
 	{ type: "cache-content", nodeId: string, content: string };
 
 function editorReducer(data: EditorData, action: EditorAction): EditorData {
@@ -48,6 +51,8 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 			return { ...data, selectedFile: action.file };
 		}
 		case "open-file": {
+			if (data.openFiles.includes(action.file))
+				return data;
 			return { ...data, openFiles: [...data.openFiles, action.file] };
 		}
 		case "close-file": {
@@ -58,6 +63,9 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 				selectedFile: action.file === data.selectedFile ? (newOpenFiles[0] ?? undefined) : data.selectedFile,
 				openFiles: newOpenFiles,
 			};
+		}
+		case "set-open-files": {
+			return { ...data, openFiles: action.openFiles };
 		}
 		case "set-nodes": {
 			return { ...data, nodes: action.nodes };

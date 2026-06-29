@@ -8,6 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { createNode, deleteNode, editNode, editNodesBulk } from "@/actions/nodes";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../primitives/ContextMenu";
 import Input from "../primitives/Input";
+import { openFile } from "@/lib/utils/navigation";
+import { useRouter } from "next/navigation";
+import { Node } from "@/db/types";
 
 export function SidebarFile({
 	data,
@@ -92,11 +95,14 @@ export default function Sidebar() {
 
 	const treeRef = useRef<TreeApi<TreeItem> | undefined>(undefined);
 
-	function onFileClick(file: string) {
-		if (!openFiles.includes(file))
-			dispatch?.({ type: "open-file", file });
+	const router = useRouter();
 
-		dispatch?.({ type: "select-file", file });
+	function onFileClick(file: Node) {
+		// if (!openFiles.includes(file))
+		// 	dispatch?.({ type: "open-file", file });
+
+		// dispatch?.({ type: "select-file", file });
+		router.push(openFile(file, nodes));
 	}
 
 	// eslint-disable-next-line func-style
@@ -171,7 +177,7 @@ export default function Sidebar() {
 						{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 							{!node.isEditing && (node.isLeaf ?
 								<SidebarFile
-									onClick={() => onFileClick(node.data.id)}
+									onClick={() => onFileClick(node.data)}
 									selected={selectedFile === node.data.id}
 									style={style}
 									onEdit={() => node.edit()}

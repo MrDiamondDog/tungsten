@@ -1,23 +1,28 @@
+import { openFile } from "@/lib/utils/navigation";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
-import { useSortable } from "@dnd-kit/react/sortable";
+import { DragDropProvider } from "@dnd-kit/react";
+import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function EditorTab({ tab, index }: { tab: Node, index: number }) {
-	const { selectedFile } = useEditor();
+	const { nodes, selectedFile } = useEditor();
 	const dispatch = useEditorDispatch();
 
 	const { ref } = useSortable({ id: tab.id, index, transition: { duration: 0, idle: false, easing: "linear" } });
 
 	const [hovered, setHovered] = useState(false);
 
+	const router = useRouter();
+
 	return <div
 		className={`
 			${selectedFile === tab.id ? "bg-ctp-surface0" : ""}
 			hover:bg-ctp-surface0 pl-4 pr-1 py-2 cursor-pointer transition-colors flex gap-1 items-center border-r border-ctp-surface0
 		`}
-		onClick={() => dispatch?.({ type: "select-file", file: tab.id })}
+		onClick={() => router.push(openFile(tab, nodes))}
 		onMouseOver={() => setHovered(true)}
 		onMouseLeave={() => setHovered(false)}
 		ref={ref}
@@ -37,10 +42,27 @@ export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 
 export default function EditorTabs() {
 	const { nodes, openFiles } = useEditor();
+	const dispatch = useEditorDispatch();
 
-	return !!openFiles.length ? (
+	return !!openFiles.length ? <DragDropProvider onDragEnd={event => {
+		if (event.canceled)
+			return;
+
+		const { source } = event.operation;
+
+		if (isSortable(source)) {
+			const { initialIndex, index } = source;
+
+			if (initialIndex !== index) {
+				const newOpenFiles = [...openFiles];
+				const [removed] = newOpenFiles.splice(initialIndex, 1);
+				newOpenFiles.splice(index, 0, removed);
+				dispatch?.({ type: "set-open-files", openFiles: newOpenFiles });
+			}
+		}
+	}}>
 		<div className="w-full border-b border-ctp-surface0 flex">
 			{openFiles.map(id => nodes.find(f => f.id === id)!).map((tab, index) => <EditorTab tab={tab} index={index} key={tab.id} />)}
 		</div>
-	) : null;
+	</DragDropProvider> : null;
 }

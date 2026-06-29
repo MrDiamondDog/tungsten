@@ -32,7 +32,6 @@
 			"warn",
 			"inside"
 		],
-		"no-loop-func": "warn",
 		"@typescript-eslint/default-param-last": "warn",
 		"space-before-blocks": "warn",
 		"prefer-arrow-callback": "warn",

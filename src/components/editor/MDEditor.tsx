@@ -59,9 +59,9 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		if (file && editorRef.current) {
-			const newContent = editorRef.current.getMarkdown();
-			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
-			editContent(file.id, newContent);
+			const newContent = cachedContent[file.id];
+			if (newContent)
+				editContent(file.id, newContent);
 			setSaved(true);
 		}
 
@@ -139,11 +139,14 @@ export default function MDEditor() {
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
-			{!loading && <MDXEditor
+			{(!loading && file) && <MDXEditor
 				className="dark-theme dark-editor"
 				contentEditableClassName="text-ctp-text! pt-0! absolute inset-0 overflow-y-scroll"
 				markdown={content ?? ""}
-				onChange={v => setSaved(false)}
+				onChange={v => {
+					setSaved(false);
+					dispatch?.({ type: "cache-content", content: v, nodeId: file.id });
+				}}
 				autoFocus
 				ref={editorRef}
 				plugins={[
