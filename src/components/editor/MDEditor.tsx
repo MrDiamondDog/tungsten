@@ -44,15 +44,16 @@ import { getAllFilePaths } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 
 export default function MDEditor() {
-	const { nodes, selectedFile, cachedContent } = useEditor();
+	const { nodes, selectedFile, cachedContent, viewMode } = useEditor();
+
+	const [loading, setLoading] = useState(false);
 	const [file, setFile] = useState<Node>();
-	const [content, setContent] = useState("");
-	const oldContent = useRef("");
+	const [initialContent, setInitialContent] = useState("");
 
 	const [saved, setSaved] = useState(true);
 	const [saveInterval, setSaveInterval] = useState<ReturnType<typeof setInterval>>();
 
-	const [loading, setLoading] = useState(false);
+	const [lastViewMode, setLastViewMode] = useState("");
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
@@ -65,44 +66,47 @@ export default function MDEditor() {
 	}, []);
 
 	useEffect(() => {
+		setLoading(true);
+
 		if (file && editorRef.current) {
-			const newContent = cachedContent[file.id];
-			if (newContent)
-				editContent(file.id, newContent);
+			const newContent = editorRef.current.getMarkdown();
+			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
+			editContent(file.id, newContent);
 			setSaved(true);
 		}
 
-		setContent("");
+		setFile(undefined);
+		setInitialContent("");
 		editorRef.current?.setMarkdown("");
-		setLoading(true);
-		if (!selectedFile)
-			setFile(undefined);
 
-		const newFile = nodes.find(node => node.id === selectedFile);
-		if (!newFile || newFile.nodeType === "folder")
+		if (!selectedFile)
 			return;
 
-		setFile(newFile);
+		const newFile = nodes.find(n => n.id === selectedFile);
 
-		const newContent = cachedContent[newFile.id];
+		if (!newFile || newFile.nodeType !== "file")
+			return;
 
-		if (newContent === null || newContent === undefined) {
-			getContent(newFile.id).then(res => {
+		if (cachedContent[selectedFile] === null || cachedContent[selectedFile] === undefined) {
+			getContent(selectedFile).then(res => {
 				if (res.error)
-					return;
-
-				setContent(res.data!.content);
-				dispatch?.({ type: "cache-content", content: res.data!.content, nodeId: newFile.id });
-				editorRef.current?.setMarkdown(res.data!.content);
-				setLoading(false);
-			});
+					return "";
+				return res.data!.content;
+			})
+				.then(newContent => {
+					dispatch?.({ type: "cache-content", content: newContent, nodeId: selectedFile });
+					setInitialContent(newContent);
+					editorRef.current?.setMarkdown(newContent);
+					setLoading(false);
+				});
 		} else {
-			setContent(newContent);
+			const newContent = cachedContent[selectedFile];
+			setInitialContent(newContent);
 			editorRef.current?.setMarkdown(newContent);
 			setLoading(false);
 		}
 
-		editorRef.current?.focus();
+		setFile(newFile);
 	}, [selectedFile]);
 
 	useEffect(() => {
@@ -119,19 +123,21 @@ export default function MDEditor() {
 	}, [saved]);
 
 	useEffect(() => {
+		let lastSavedContent: string | null = null;
+
 		function save() {
-			if (!file || !editorRef.current || file.id !== selectedFile)
+			if (!file || !selectedFile || !editorRef.current || !cachedContent[file.id])
 				return;
 
-			const newContent = editorRef.current.getMarkdown();
+			const currentContent = cachedContent[file.id];
 
-			if (newContent === oldContent.current)
-				return void setSaved(true);
+			if (lastSavedContent === currentContent)
+				return;
 
-			oldContent.current = newContent;
+			lastSavedContent = currentContent;
 
-			dispatch?.({ type: "cache-content", content: newContent, nodeId: file.id });
-			editContent(file.id, newContent);
+			editContent(file.id, currentContent);
+
 			setSaved(true);
 		}
 
@@ -142,19 +148,42 @@ export default function MDEditor() {
 			clearInterval(saveInterval);
 			setSaveInterval(undefined);
 		};
-	}, [file, selectedFile, oldContent.current, editorRef.current]);
+	}, [file, editorRef.current, viewMode]);
+
+	useEffect(() => {
+		if (!file || !selectedFile || !editorRef.current) {
+			setLastViewMode(viewMode);
+			return;
+		}
+
+		if (lastViewMode === "raw" && viewMode === "normal") {
+			setInitialContent(cachedContent[file.id]);
+			editorRef.current.setMarkdown(cachedContent[file.id]);
+		}
+
+		setLastViewMode(viewMode);
+	}, [viewMode]);
 
 	return (
-		<div className={`w-full h-full overflow-hidden ${loading ? "bg-ctp-mantle opacity-50" : ""}`}>
-			{(!loading && file) && <MDXEditor
+		<div className={`w-full h-full overflow-hidden ${(!file || loading) ? "bg-ctp-mantle opacity-50" : ""}`}>
+			{(file && !loading && viewMode === "raw") && <textarea
+				className="w-full h-full overflow-y-scroll resize-none p-2 font-mono"
+				value={cachedContent[file.id]}
+				onChange={e => {
+					setSaved(false);
+					dispatch?.({ type: "cache-content", content: e.target.value, nodeId: file.id });
+				}}
+			/>}
+			{(file && !loading && viewMode !== "raw") && <MDXEditor
 				className="dark-theme dark-editor"
-				contentEditableClassName="text-ctp-text! pt-0! absolute inset-0 overflow-y-scroll"
-				markdown={content ?? ""}
+				contentEditableClassName={`text-ctp-text! overflow-y-scroll ${viewMode !== "readonly" && "absolute inset-0 pt-0!"}`}
+				markdown={initialContent}
 				onChange={v => {
 					setSaved(false);
 					dispatch?.({ type: "cache-content", content: v, nodeId: file.id });
 				}}
 				autoFocus
+				readOnly={viewMode === "readonly"}
 				ref={editorRef}
 				plugins={[
 					headingsPlugin(),
@@ -187,7 +216,7 @@ export default function MDEditor() {
 					markdownShortcutPlugin(),
 					toolbarPlugin({
 						toolbarClassName: "mdx-toolbar",
-						toolbarContents: () => <div className="flex w-full justify-between items-center">
+						toolbarContents: () => <div className="flex w-full justify-between items-center" data-hidden={viewMode === "readonly"}>
 							<div className="flex">
 								<UndoRedo />
 								<BoldItalicUnderlineToggles />

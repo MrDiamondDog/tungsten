@@ -10,12 +10,19 @@
 -[x] Images
 -[x] Links between pages
 -[x] Tables
--[ ] Custom emojis
--[ ] Wikilinks?
+-[x] Raw view
+-[x] Readonly view
+-[x] Expand menubar
 -[ ] Export files as HTML or Markdown
 -[ ] Export whole database/folders
 -[ ] Import whole database/folders
 -[ ] Import obsidian vault
+-[ ] Demo mode
+-[ ] Good error handling
+
+## LATER/MAYBE
+-[ ] Custom emojis
+-[ ] Wikilinks?
 -[ ] Theme switcher?
 
 ## BUGS
@@ -27,6 +34,6 @@
 -[x] Code block language selector
 -[x] When renaming a file, if it is the open tab, whenever it autosaves it will reset the rename input cause it rerenders :sob:
 -[x] Editor doesn't autosave when only math editor has been changed
+-[x] Lag when switching tabs (mostly gone when not in dev)
 -[ ] Extraneous newlines get obliterated
 -[ ] Can't focus math editor without clicking in (similarly, can't unfocus)
--[ ] Lag when switching tabs

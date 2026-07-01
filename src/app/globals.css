@@ -163,6 +163,10 @@ svg[class*=_popoverArrow] {
 	* {
 		border-radius: 0 !important;
 	}
+
+	&:has(> div[data-hidden="true"]) {
+		display: none;
+	}
 }
 
 [data-editor-block-type="image"] div:has(> button) {

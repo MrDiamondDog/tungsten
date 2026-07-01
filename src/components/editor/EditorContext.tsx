@@ -5,11 +5,19 @@ import { Node } from "@/db/types";
 import { ActionDispatch, createContext, useContext, useEffect, useReducer } from "react";
 
 export type EditorData = {
-	nodes: Node[],
-	cachedContent: Record<string, string>,
-	selectedFile?: string,
-	openFiles: string[],
+	nodes: Node[];
+	cachedContent: Record<string, string>;
+	selectedFile?: string;
+	openFiles: string[];
+	viewMode: "normal" | "raw" | "readonly";
 }
+
+export const defaultEditorData: EditorData = {
+	nodes: [],
+	cachedContent: {},
+	openFiles: [],
+	viewMode: "normal",
+};
 
 export type EditorAction =
 	{ type: "set-data", data: EditorData } |
@@ -21,7 +29,8 @@ export type EditorAction =
 	{ type: "open-file", file: string } |
 	{ type: "close-file", file: string } |
 	{ type: "set-open-files", openFiles: string[] } |
-	{ type: "cache-content", nodeId: string, content: string };
+	{ type: "cache-content", nodeId: string, content: string } |
+	{ type: "update-view-mode", viewMode: "normal" | "raw" | "readonly" };
 
 function editorReducer(data: EditorData, action: EditorAction): EditorData {
 	switch (action.type) {
@@ -76,14 +85,17 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		case "cache-content": {
 			return { ...data, cachedContent: { ...data.cachedContent, [action.nodeId]: action.content } };
 		}
+		case "update-view-mode": {
+			return { ...data, viewMode: action.viewMode };
+		}
 	}
 }
 
-export const EditorContext = createContext<EditorData>({ nodes: [], openFiles: [], cachedContent: {} });
+export const EditorContext = createContext<EditorData>(defaultEditorData);
 export const EditorDispatchContext = createContext<ActionDispatch<[EditorAction]> | null>(null);
 
 export function EditorProvider({ children }: React.PropsWithChildren) {
-	const [data, dispatch] = useReducer(editorReducer, { nodes: [], openFiles: [], cachedContent: {} } as EditorData);
+	const [data, dispatch] = useReducer(editorReducer, defaultEditorData);
 
 	useEffect(() => {
 		getNodes().then(res => {

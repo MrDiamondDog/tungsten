@@ -1,9 +1,10 @@
 "use client";
 
 import { createNode } from "@/actions/nodes";
-import { Dropdown, DropdownContent, DropdownItem, DropdownSeparator, DropdownTrigger } from "../primitives/Dropdown";
+import { Dropdown, DropdownContent, DropdownItem, DropdownRadioItem, DropdownSeparator, DropdownSubMenu, DropdownTrigger } from "../primitives/Dropdown";
 import { signOut } from "next-auth/react";
-import { useEditorDispatch } from "./EditorContext";
+import { useEditor, useEditorDispatch } from "./EditorContext";
+import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
 
 export function MenuBarItem({ trigger, ...props }: { trigger: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return <Dropdown>
@@ -21,6 +22,7 @@ export function MenuBarItem({ trigger, ...props }: { trigger: React.ReactNode } 
 }
 
 export default function MenuBar() {
+	const { viewMode } = useEditor();
 	const dispatch = useEditorDispatch();
 
 	async function onCreate(type: "folder" | "file") {
@@ -43,6 +45,7 @@ export default function MenuBar() {
 	return (<>
 		<div className="w-full p-1 border-b border-ctp-surface0 flex gap-1 items-center">
 			<MenuBarItem trigger={<img src="/tungsten.svg" width={32} height={32} />} className="px-1! py-0!">
+				<DropdownItem>Preferences</DropdownItem>
 				<DropdownItem onClick={() => signOut({ redirectTo: "/" })}>Log Out</DropdownItem>
 			</MenuBarItem>
 			<MenuBarItem trigger="File">
@@ -53,7 +56,20 @@ export default function MenuBar() {
 				<DropdownItem>Export</DropdownItem>
 			</MenuBarItem>
 			<MenuBarItem trigger="Edit">
-				<DropdownItem>Preferences</DropdownItem>
+				<DropdownItem>Rename</DropdownItem>
+				<DropdownItem>Delete</DropdownItem>
+			</MenuBarItem>
+			<MenuBarItem trigger="View">
+				<DropdownSubMenu text="View Mode">
+					<DropdownMenuRadioGroup
+						value={viewMode}
+						onValueChange={v => dispatch?.({ type: "update-view-mode", viewMode: v as "normal" | "raw" | "readonly" })}
+					>
+						<DropdownRadioItem value="normal">Normal</DropdownRadioItem>
+						<DropdownRadioItem value="raw">Raw</DropdownRadioItem>
+						<DropdownRadioItem value="readonly">Read Only</DropdownRadioItem>
+					</DropdownMenuRadioGroup>
+				</DropdownSubMenu>
 			</MenuBarItem>
 		</div>
 	</>);
