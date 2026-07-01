@@ -42,7 +42,7 @@ import { getAllFilePaths } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 
 export default function MDEditor() {
-	const { nodes, selectedFile, cachedContent, viewMode } = useEditor();
+	const { nodes, selectedFile, cachedContent, unsavedFiles, viewMode } = useEditor();
 
 	const [loading, setLoading] = useState(false);
 	const [file, setFile] = useState<Node>();
@@ -122,10 +122,16 @@ export default function MDEditor() {
 			editorRef.current?.setMarkdown(newContent);
 			setLoading(false);
 			setFile(newFile);
+			setSaved(!unsavedFiles.includes(newFile.id));
 		});
 	}, [selectedFile]);
 
 	useEffect(() => {
+		if (!saved && file)
+			dispatch?.({ type: "add-unsaved-file", file: file.id });
+		else if (saved && file)
+			dispatch?.({ type: "remove-unsaved-file", file: file.id });
+
 		function checkSaved(e: Event) {
 			if (!saved) {
 				e.preventDefault();
@@ -135,7 +141,7 @@ export default function MDEditor() {
 		window.addEventListener("beforeunload", checkSaved);
 
 		return () => window.removeEventListener("beforeunload", checkSaved);
-	}, [saved]);
+	}, [saved, file]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {

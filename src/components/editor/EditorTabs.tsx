@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function EditorTab({ tab, index }: { tab: Node, index: number }) {
-	const { nodes, selectedFile } = useEditor();
+	const { nodes, selectedFile, unsavedFiles } = useEditor();
 	const dispatch = useEditorDispatch();
 
 	const { ref } = useSortable({ id: tab.id, index, transition: { duration: 0, idle: false, easing: "linear" } });
@@ -31,14 +31,15 @@ export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 		key={tab.id}
 	>
 		{tab.name}
-		<X
+		{(!hovered && unsavedFiles.includes(tab.id)) && <div className="p-0.5 mx-1 size-2 bg-ctp-text rounded-full" />}
+		{((unsavedFiles.includes(tab.id) && hovered) || !unsavedFiles.includes(tab.id)) && <X
 			className={`size-4 text-ctp-subtext0 hover:bg-ctp-surface1 p-0.5 transition-all
 			${(hovered || selectedFile === tab.id) ? "opacity-100" : "opacity-0"}`}
 			onClick={e => {
 				e.stopPropagation();
 				dispatch?.({ type: "close-file", file: tab.id });
 			}}
-		/>
+		/>}
 	</div>;
 }
 

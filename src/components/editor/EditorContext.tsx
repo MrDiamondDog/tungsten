@@ -9,6 +9,7 @@ export type EditorData = {
 	cachedContent: Record<string, string>;
 	selectedFile?: string;
 	openFiles: string[];
+	unsavedFiles: string[];
 	viewMode: "normal" | "raw" | "readonly";
 }
 
@@ -16,6 +17,7 @@ export const defaultEditorData: EditorData = {
 	nodes: [],
 	cachedContent: {},
 	openFiles: [],
+	unsavedFiles: [],
 	viewMode: "normal",
 };
 
@@ -30,7 +32,9 @@ export type EditorAction =
 	{ type: "close-file", file: string } |
 	{ type: "set-open-files", openFiles: string[] } |
 	{ type: "cache-content", nodeId: string, content: string } |
-	{ type: "update-view-mode", viewMode: "normal" | "raw" | "readonly" };
+	{ type: "update-view-mode", viewMode: "normal" | "raw" | "readonly" } |
+	{ type: "add-unsaved-file", file: string } |
+	{ type: "remove-unsaved-file", file: string };
 
 function editorReducer(data: EditorData, action: EditorAction): EditorData {
 	switch (action.type) {
@@ -87,6 +91,14 @@ function editorReducer(data: EditorData, action: EditorAction): EditorData {
 		}
 		case "update-view-mode": {
 			return { ...data, viewMode: action.viewMode };
+		}
+		case "add-unsaved-file": {
+			if (data.unsavedFiles.includes(action.file))
+				return data;
+			return { ...data, unsavedFiles: [...data.unsavedFiles, action.file] };
+		}
+		case "remove-unsaved-file": {
+			return { ...data, unsavedFiles: [...data.unsavedFiles.filter(f => f !== action.file)] };
 		}
 	}
 }
