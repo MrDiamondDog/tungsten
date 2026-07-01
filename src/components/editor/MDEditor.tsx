@@ -63,6 +63,8 @@ export default function MDEditor() {
 
 		// console.log("content to save", content.current);
 
+		console.log(file.name, content.current);
+
 		editContent(file.id, content.current);
 		dispatch?.({ type: "cache-content", content: content.current, nodeId: file.id });
 		setSaved(true);
@@ -103,30 +105,24 @@ export default function MDEditor() {
 		// console.log("new file", newFile.name);
 		// console.log("cache?", !(cachedContent[selectedFile] === null || cachedContent[selectedFile] === undefined));
 
-		if (cachedContent[selectedFile] === null || cachedContent[selectedFile] === undefined) {
-			getContent(selectedFile).then(res => {
-				if (res.error)
-					return "";
-				return res.data!.content;
-			})
-				.then(newContent => {
-					console.log("fetched content", newContent);
-					dispatch?.({ type: "cache-content", content: newContent, nodeId: selectedFile });
-					setInitialContent(newContent);
-					content.current = newContent;
-					editorRef.current?.setMarkdown(newContent);
-					setLoading(false);
-				});
-		} else {
-			const newContent = cachedContent[selectedFile];
-			console.log("from cache", newContent);
+		new Promise<string>(resolve => {
+			if (cachedContent[selectedFile] === null || cachedContent[selectedFile] === undefined) {
+				getContent(selectedFile).then(res => {
+					if (res.error)
+						return "";
+					return res.data!.content;
+				})
+					.then(resolve);
+			} else
+				resolve(cachedContent[selectedFile]);
+		}).then(newContent => {
+			dispatch?.({ type: "cache-content", content: newContent, nodeId: selectedFile });
 			setInitialContent(newContent);
 			content.current = newContent;
 			editorRef.current?.setMarkdown(newContent);
 			setLoading(false);
-		}
-
-		setFile(newFile);
+			setFile(newFile);
+		});
 	}, [selectedFile]);
 
 	useEffect(() => {
@@ -136,7 +132,12 @@ export default function MDEditor() {
 				return true;
 			}
 		}
+		window.addEventListener("beforeunload", checkSaved);
 
+		return () => window.removeEventListener("beforeunload", checkSaved);
+	}, [saved]);
+
+	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
 			if (e.key === "s" && e.ctrlKey) {
 				e.preventDefault();
@@ -145,13 +146,9 @@ export default function MDEditor() {
 		}
 
 		window.addEventListener("keydown", onKeyDown);
-		window.addEventListener("beforeunload", checkSaved);
 
-		return () => {
-			window.removeEventListener("keydown", onKeyDown);
-			window.removeEventListener("beforeunload", checkSaved);
-		};
-	}, [saved]);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, [file]);
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${(!file || loading) ? "bg-ctp-mantle opacity-50" : ""}`}>
