@@ -13,6 +13,7 @@
 -[x] Raw view
 -[x] Readonly view
 -[x] Expand menubar
+-[ ] Fix cross page links
 -[ ] Demo mode
 -[ ] Landing page (only in demo mode preferably)
 -[ ] Options page

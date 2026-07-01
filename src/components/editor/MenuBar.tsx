@@ -1,7 +1,9 @@
 "use client";
 
 import { createNode } from "@/actions/nodes";
-import { Dropdown, DropdownContent, DropdownItem, DropdownRadioItem, DropdownSeparator, DropdownSubMenu, DropdownTrigger } from "../primitives/Dropdown";
+import {
+	Dropdown, DropdownContent, DropdownItem, DropdownRadioItem, DropdownSeparator, DropdownSubMenu, DropdownTrigger,
+} from "../primitives/Dropdown";
 import { signOut } from "next-auth/react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";

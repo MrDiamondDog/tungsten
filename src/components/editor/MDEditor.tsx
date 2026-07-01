@@ -38,7 +38,6 @@ import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
 import { MathfieldElement } from "mathlive";
 import uploadImage from "@/actions/images";
 import Spinner from "../primitives/Spinner";
-import { usePathname, useRouter } from "next/navigation";
 import { getAllFilePaths } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 
@@ -54,9 +53,6 @@ export default function MDEditor() {
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
-
-	const pathname = usePathname();
-	const router = useRouter();
 
 	function save() {
 		if (!file)
@@ -159,14 +155,15 @@ export default function MDEditor() {
 
 	return (
 		<div className={`w-full h-full overflow-hidden ${(!file || loading) ? "bg-ctp-mantle opacity-50" : ""}`}>
-			{/* {(file && !loading && viewMode === "raw") && <textarea
+			{(file && !loading && viewMode === "raw") && <textarea
 				className="w-full h-full overflow-y-scroll resize-none p-2 font-mono"
-				value={rawContent}
+				defaultValue={content.current}
 				onChange={e => {
 					setSaved(false);
-					setRawContent(e.target.value);
+					content.current = e.target.value;
+					editorRef.current?.setMarkdown(e.target.value);
 				}}
-			/>}*/}
+			/>}
 			<div className={`${file && !loading && viewMode !== "raw" ? "" : "hidden"} h-full`}>
 				<MDXEditor
 					className="dark-theme dark-editor"
@@ -192,8 +189,8 @@ export default function MDEditor() {
 								if (link.startsWith("http"))
 									return void window.open(link);
 								if (link.startsWith("/"))
-									link = `/editor${link}`;
-								router.push(link);
+									// TODO: handle this
+									return;
 							},
 						}),
 						imagePlugin({
