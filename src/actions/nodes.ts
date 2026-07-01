@@ -5,6 +5,7 @@ import { ActionRes } from ".";
 import { db, nodes } from "@/db/schema";
 import { and, eq, isNull } from "drizzle-orm";
 import { Node } from "@/db/types";
+import { randomUUID } from "node:crypto";
 
 export async function getNodes(): ActionRes<Node[]> {
 	const user = await auth();
@@ -39,6 +40,17 @@ export async function createNode(data: Omit<Node, "id" | "userId" | "index">, in
 			.reverse()[0] ?? -1) + 1;
 	}
 
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true") {
+		return {
+			data: {
+				...data,
+				id: randomUUID(),
+				userId: user.user.id!,
+				index,
+			},
+		};
+	}
+
 	const node = await db.insert(nodes).values({
 		...data,
 		index,
@@ -66,6 +78,9 @@ export async function editNode(id: string, newNode: Node): ActionRes<Node> {
 	if (node.id !== newNode.id || node.userId !== node.userId)
 		return { error: "Invalid fields" };
 
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+		return { data: newNode };
+
 	const editedNode = (await db.update(nodes).set(newNode)
 		.where(eq(nodes.id, id))
 		.returning())[0];
@@ -80,6 +95,9 @@ export async function editNodesBulk(newNodes: Node[]): ActionRes<Node[]> {
 		return { error: "Not authenticated" };
 
 	const editedNodes = await Promise.all(newNodes.map(newNode => new Promise<Node>(async resolve => {
+		if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+			return newNode;
+
 		const node = (await db.select().from(nodes)
 			.where(eq(nodes.id, newNode.id)))[0];
 
@@ -102,6 +120,9 @@ export async function deleteNode(id: string): ActionRes<void> {
 
 	if (!user?.user)
 		return { error: "Not authenticated" };
+
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+		return {};
 
 	const node = (await db.select().from(nodes)
 		.where(eq(nodes.id, id)))[0];

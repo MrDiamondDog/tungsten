@@ -5,12 +5,23 @@ import { db, fileContents } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { ActionRes } from ".";
 import { FileContent } from "@/db/types";
+import { randomUUID } from "node:crypto";
 
 export async function getContent(nodeId: string): ActionRes<FileContent> {
 	const user = await auth();
 
 	if (!user?.user)
 		return { error: "Not authenticated" };
+
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true" && nodeId !== "0")
+		return {
+			data: {
+				id: randomUUID(),
+				userId: user.user.id!,
+				nodeId,
+				content: "",
+			},
+		};
 
 	const content = (await db.select().from(fileContents)
 		.where(eq(fileContents.nodeId, nodeId)))[0];
@@ -34,6 +45,16 @@ export async function editContent(nodeId: string, newContent: string): ActionRes
 
 	if (!user?.user)
 		return { error: "Not authenticated" };
+
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+		return {
+			data: {
+				id: randomUUID(),
+				userId: user.user.id!,
+				nodeId,
+				content: newContent,
+			},
+		};
 
 	const content = (await db.select().from(fileContents)
 		.where(eq(fileContents.nodeId, nodeId)))[0];

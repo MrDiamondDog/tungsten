@@ -9,8 +9,8 @@ export default async function EditorLayout({
 }>) {
 	const session = await auth();
 
-	if (!session)
-		return redirect("/");
+	if (!session || !session.user)
+		return redirect("/auth");
 
 	return <EditorProvider>
 		{children}

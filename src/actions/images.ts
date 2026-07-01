@@ -7,6 +7,9 @@ import { randomUUID } from "crypto";
 import { db, images } from "@/db/schema";
 
 export default async function uploadImage(image: File): ActionRes<string> {
+	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+		return { error: "Image uploading is disabled in the demo." };
+
 	const user = await auth();
 
 	if (!user?.user)

@@ -4,7 +4,7 @@ Tungsten is a fully self-hosted Obsidian alternative. It is served as a web app 
 
 Built with Next. No AI used for creation of any assets or code.
 
-<img width="1912" height="1041" alt="image" src="https://github.com/user-attachments/assets/cb83e9ed-514a-4031-a7f4-ed890c5d162e" />
+![tungsten app preview](/public/app-preview.png)
 
 Built for Hack Club's [Stardance](https://stardance.hackclub.com)
 

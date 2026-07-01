@@ -14,6 +14,7 @@
 -[x] Readonly view
 -[x] Expand menubar
 -[ ] Fix cross page links
+-[ ] File name restrictions (no files/folders with same name in same folder)
 -[ ] Demo mode
 -[ ] Landing page (only in demo mode preferably)
 -[ ] Options page
@@ -42,3 +43,4 @@
 -[x] Lag when switching tabs (mostly gone when not in dev)
 -[ ] Extraneous newlines get obliterated
 -[ ] Can't focus math editor without clicking in (similarly, can't unfocus)
+-[ ] Undo/redo issues when switching files (just try to obliterate the history when switching files)

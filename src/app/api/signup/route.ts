@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-	if (!process.env.NEXT_PUBLIC_ALLOW_SIGNUPS)
+	if (process.env.NEXT_PUBLIC_ALLOW_SIGNUPS !== "true" || process.env.NEXT_PUBLIC_IS_DEMO === "true")
 		return NextResponse.json({ error: "Sign ups are disabled by the adminsistrator of this application." }, { status: 400 });
 
 	const body = await req.json();
