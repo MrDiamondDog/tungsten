@@ -8,8 +8,6 @@ import { RefObject, useEffect, useRef, useState } from "react";
 import { createNode, deleteNode, editNode, editNodesBulk } from "@/actions/nodes";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../primitives/ContextMenu";
 import Input from "../primitives/Input";
-import { getFileUrl } from "@/lib/utils/navigation";
-import { useRouter } from "next/navigation";
 import { Node } from "@/db/types";
 
 export function SidebarFile({
@@ -97,10 +95,9 @@ export default function Sidebar() {
 
 	const treeRef = useRef<TreeApi<TreeItem> | undefined>(undefined);
 
-	const router = useRouter();
-
 	function onFileClick(file: Node) {
-		router.push(getFileUrl(file, nodes));
+		dispatch?.({ type: "open-file", file: file.id });
+		dispatch?.({ type: "select-file", file: file.id });
 	}
 
 	// eslint-disable-next-line func-style

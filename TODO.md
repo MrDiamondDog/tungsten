@@ -13,12 +13,16 @@
 -[x] Raw view
 -[x] Readonly view
 -[x] Expand menubar
+-[ ] Demo mode
+-[ ] Landing page (only in demo mode preferably)
+-[ ] Options page
+-[ ] Good error handling
+
+## EXTRAS
 -[ ] Export files as HTML or Markdown
 -[ ] Export whole database/folders
 -[ ] Import whole database/folders
 -[ ] Import obsidian vault
--[ ] Demo mode
--[ ] Good error handling
 
 ## LATER/MAYBE
 -[ ] Custom emojis
