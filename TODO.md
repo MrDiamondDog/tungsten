@@ -13,10 +13,10 @@
 -[x] Raw view
 -[x] Readonly view
 -[x] Expand menubar
+-[x] Demo mode
+-[x] Landing page (only in demo mode preferably)
 -[ ] Fix cross page links
 -[ ] File name restrictions (no files/folders with same name in same folder)
--[ ] Demo mode
--[ ] Landing page (only in demo mode preferably)
 -[ ] Options page
 -[ ] Good error handling
 
@@ -27,7 +27,7 @@
 -[ ] Import obsidian vault
 
 ## LATER/MAYBE
--[ ] Custom emojis
+-[ ] Custom emojis?
 -[ ] Wikilinks?
 -[ ] Theme switcher?
 
@@ -41,6 +41,6 @@
 -[x] When renaming a file, if it is the open tab, whenever it autosaves it will reset the rename input cause it rerenders :sob:
 -[x] Editor doesn't autosave when only math editor has been changed
 -[x] Lag when switching tabs (mostly gone when not in dev)
+-[x] Can't focus math editor without clicking in (similarly, can't unfocus) (unfixable, but at least when you create it it gets focused)
 -[ ] Extraneous newlines get obliterated
--[ ] Can't focus math editor without clicking in (similarly, can't unfocus)
 -[ ] Undo/redo issues when switching files (just try to obliterate the history when switching files)

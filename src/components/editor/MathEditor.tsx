@@ -40,7 +40,7 @@ export function InsertMathButton() {
 	</Button>;
 }
 
-export default function MathEditor({ focused, onChange, value }:
+export default function MathEditor({ onChange, value }:
 	{ focused?: boolean, onChange?: (value: string) => void, value?: string }) {
 	const ref = useRef<MathfieldElement>(null);
 
@@ -50,8 +50,11 @@ export default function MathEditor({ focused, onChange, value }:
 
 		ref.current.mathModeSpace = "\\:";
 		renderMathInDocument();
+
+		if (value === "")
+			ref.current.focus();
 	}, [ref.current]);
 
 	// @ts-ignore idk why it wont work but this element is declared
-	return (<math-field onInput={e => onChange?.(e.target.value)} value={value} focused={focused} ref={ref}>{value}</math-field>);
+	return (<math-field onInput={e => onChange?.(e.target.value)} value={value} ref={ref}>{value}</math-field>);
 }
