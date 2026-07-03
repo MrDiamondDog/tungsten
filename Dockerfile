@@ -26,6 +26,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 FROM base AS builder
 
 WORKDIR /app
+COPY --from=deps /app/drizzle.config.ts ./drizzle.config.ts
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1

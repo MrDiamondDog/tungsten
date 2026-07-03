@@ -32,3 +32,12 @@ docker run -d \
 	-e NEXT_PUBLIC_ALLOW_SIGNUPS="true" \
 	ghcr.io/mrdiamonddog/tungsten:master
 ```
+
+Then you'll have to init the local database:
+
+`docker exec tungsten pnpm dlx --allow-build=esbuild drizzle-kit push`
+
+This will init the `tungsten.db` file with the schema.
+
+> [!INFO]
+> Use the same command to migrate the database with new changes whenever you update.
