@@ -19,6 +19,7 @@ WORKDIR /app
 # Install dependencies
 COPY package.json pnpm-*.yaml* ./
 COPY patches/ ./patches/
+COPY drizzle.config.ts ./drizzle.config.ts
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 # Rebuild the source code only when needed
@@ -45,6 +46,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 tungsten
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
