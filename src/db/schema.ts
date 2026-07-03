@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 
 const client = createClient({
-	url: process.env.DB_FILE_NAME!,
+	url: process.env.DB_FILE_NAME ?? "file:tungsten.db",
 });
 export const db = drizzle(client);
 
