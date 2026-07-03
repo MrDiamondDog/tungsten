@@ -20,6 +20,7 @@ WORKDIR /app
 COPY package.json pnpm-*.yaml* ./
 COPY patches/ ./patches/
 COPY drizzle.config.ts ./drizzle.config.ts
+COPY src/db/schema.ts ./src/db/schema.ts
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
@@ -33,7 +34,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV CI=true
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm exec drizzle-kit push
 RUN pnpm run build
 
 # Production image, copy all the files and run next
@@ -43,20 +43,21 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 tungsten
-
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/tungsten.db ./tungsten.db
-VOLUME /app/tungsten.db
+COPY --from=builder /app/src/db/schema.ts ./src/db/schema.ts
+
+COPY package.json pnpm-*.yaml* ./
+COPY patches/ ./patches/
+RUN pnpm exec drizzle-kit push
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=tungsten:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=tungsten:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-USER tungsten
+USER root
 
 EXPOSE 3000
 

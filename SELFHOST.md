@@ -18,12 +18,18 @@ The image uses the following env variables:
 	- `npx auth secret`
 	- `pnpm dlx auth secret`
 	- `yarn dlx auth secret`
-- `AUTH_URL` (REQUIRED): The URL of your application, like `https://tungsten-demo.drewrat.dev`.
+- `AUTH_URL`: The URL of your application, like `https://tungsten-demo.drewrat.dev`. Defaults to `http://localhost:3000`.
 - `NEXT_PUBLIC_ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
 
-Now run the following Docker command to run the image in the background. Make sure to fill out the env vars in the \[brackets]!
+For Docker compose...
+- Clone the repo
+	- `git clone https://github.com/mrdiamonddog/tungsten`
+- Copy `.env.example` to `.env` and fill out the values, described above
+- Run Docker compose
+	- `docker compose up -d`
 
-```
+Or standalone...
+```bash
 docker run -d \
 	--name tungsten \
 	-p 3000:3000 \
@@ -32,12 +38,24 @@ docker run -d \
 	-e NEXT_PUBLIC_ALLOW_SIGNUPS="true" \
 	ghcr.io/mrdiamonddog/tungsten:master
 ```
-
-Then you'll have to init the local database:
-
-`docker exec tungsten pnpm exec drizzle-kit push`
-
-This will init the `tungsten.db` file with the schema.
+Make sure to fill out the env vars in the \[brackets]
 
 > [!INFO]
-> Use the same command to migrate the database with new changes whenever you update.
+> Docker Compose is recommended as it makes updating and managing the Tungsten container easier.
+
+Now Tungsten should be running on port 3000!
+
+## Reverse Proxy
+
+Route your reverse proxy to point at port 3000, and make sure you change the `AUTH_URL` variable to the URL that your reverse proxy is accepting.
+
+## Updates
+
+Updates happen regularly. Keep your eyes on the GitHub for commits on the master branch.
+
+To update:
+
+- Docker compose
+	- `docker compose pull && docker compose up -d`
+- Standalone
+	- Re-run the command in the [Installation](#Installation) section with `--pull always`.
