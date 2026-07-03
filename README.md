@@ -27,11 +27,4 @@ Built for Hack Club's [Stardance](https://stardance.hackclub.com)
 - Graph view
 - Canvas
 
-## Installation
-
-Docker hasn't been set up yet. You'll have to build it from source.
-
-- `pnpm i`
-- `pnpm exec drizzle-kit push` - Create/init the database
-- `pnpm build`
-- `pnpm start`
+## [Self Host Instructions](SELFHOST.md)

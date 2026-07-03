@@ -35,7 +35,7 @@ export default function LandingPage() {
 				<div className="flex gap-2">
 					{demo ? <>
 						<Button look={ButtonLooks.SECONDARY} onClick={demoLogin}>Try the Demo</Button>
-						<a href="https://github.com/mrdiamonddog/tungsten/tree/master/README.md" className="w-full">
+						<a href="https://github.com/mrdiamonddog/tungsten/tree/master/SELFHOST.md" className="w-full">
 							<Button>Get Started</Button>
 						</a>
 					</> : <>

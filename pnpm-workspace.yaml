@@ -1,10 +1,7 @@
 allowBuilds:
-  better-sqlite3: true
   esbuild: true
   sharp: true
   sqlite3: true
   unrs-resolver: true
-onlyBuiltDependencies:
-  - sqlite3
 patchedDependencies:
   '@mdxeditor/editor': patches/@mdxeditor__editor.patch
