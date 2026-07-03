@@ -27,4 +27,4 @@ Built for Hack Club's [Stardance](https://stardance.hackclub.com)
 - Graph view
 - Canvas
 
-## [Self Host Instructions](SELFHOST.md)
+### [Self Host Instructions](SELFHOST.md)
