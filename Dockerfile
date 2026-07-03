@@ -20,7 +20,7 @@ WORKDIR /app
 COPY package.json pnpm-*.yaml* ./
 COPY patches/ ./patches/
 COPY drizzle.config.ts ./drizzle.config.ts
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder

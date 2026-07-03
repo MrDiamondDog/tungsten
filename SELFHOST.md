@@ -35,7 +35,7 @@ docker run -d \
 
 Then you'll have to init the local database:
 
-`docker exec tungsten pnpm dlx --allow-build=esbuild drizzle-kit push`
+`docker exec tungsten pnpm exec drizzle-kit push`
 
 This will init the `tungsten.db` file with the schema.
 
