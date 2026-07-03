@@ -127,13 +127,13 @@ export default function MDEditor() {
 	}, [selectedFile]);
 
 	useEffect(() => {
-		if (!saved && file)
+		if (!saved && file && !unsavedFiles.includes(file.id))
 			dispatch?.({ type: "add-unsaved-file", file: file.id });
-		else if (saved && file)
+		else if (saved && file && unsavedFiles.includes(file.id))
 			dispatch?.({ type: "remove-unsaved-file", file: file.id });
 
 		function checkSaved(e: Event) {
-			if (!saved) {
+			if (unsavedFiles.length) {
 				e.preventDefault();
 				return true;
 			}
@@ -141,7 +141,7 @@ export default function MDEditor() {
 		window.addEventListener("beforeunload", checkSaved);
 
 		return () => window.removeEventListener("beforeunload", checkSaved);
-	}, [saved, file]);
+	}, [saved, unsavedFiles, file]);
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
