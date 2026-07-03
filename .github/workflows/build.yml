@@ -19,7 +19,5 @@ jobs:
                   cache: "pnpm"
             - name: Install dependencies
               run: pnpm i
-            - name: Build Types
-              run: pnpm build-types
             - name: Build App
               run: pnpm build
