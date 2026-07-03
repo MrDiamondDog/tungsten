@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import { eq } from "drizzle-orm";
+import { getPublicEnv } from "./public-env";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
 	adapter: DrizzleAdapter(db),
@@ -55,7 +56,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	},
 	callbacks: {
 		async jwt({ token, user, trigger }) {
-			if (trigger === "signUp" && process.env.ALLOW_SIGNUPS !== "true")
+			if (trigger === "signUp" && getPublicEnv().ALLOW_SIGNUPS !== "true")
 				return null;
 			if (user) {
 				token.id = user.id;

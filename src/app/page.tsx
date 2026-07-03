@@ -2,6 +2,7 @@
 
 import Button, { ButtonLooks } from "@/components/primitives/Button";
 import Divider from "@/components/primitives/Divider";
+import { getPublicEnv } from "@/public-env";
 import { ChevronDown } from "lucide-react";
 import { signIn } from "next-auth/react";
 
@@ -15,7 +16,7 @@ export function LandingDetail({ image, children, reverse }: { image: string, rev
 }
 
 export default function LandingPage() {
-	const demo = process.env.NEXT_PUBLIC_IS_DEMO === "true";
+	const demo = getPublicEnv().IS_DEMO === "true";
 
 	async function demoLogin() {
 		const email = "demo@tungsten.app";

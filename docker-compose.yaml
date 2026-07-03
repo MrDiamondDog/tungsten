@@ -7,6 +7,6 @@ services:
         environment:
             - AUTH_SECRET=${AUTH_SECRET}
             - AUTH_URL=${AUTH_URL}
-            - NEXT_PUBLIC_ALLOW_SIGNUPS=${NEXT_PUBLIC_ALLOW_SIGNUPS}
+            - ALLOW_SIGNUPS=${ALLOW_SIGNUPS}
         env_file: ".env"
         image: ghcr.io/mrdiamonddog/tungsten:master

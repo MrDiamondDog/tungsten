@@ -3,13 +3,13 @@
 Your one-stop guide for self hosting Tungsten!
 
 ## Requirements
-- Docker
+- Docker (recommended)
 - A reverse proxy if you want to access Tungsten from outside
 - A machine that is marginally better than a potato
 
 ## Setup
 
-Tungsten is a Next.JS app using Drizzle ORM with a local sqlite3 database. The database file (`tungsten.db`) is registered as a volume in Docker.
+Tungsten is a Next.JS app using Drizzle ORM with a local sqlite3 database.
 
 ## Installation
 
@@ -19,7 +19,7 @@ The image uses the following env variables:
 	- `pnpm dlx auth secret`
 	- `yarn dlx auth secret`
 - `AUTH_URL`: The URL of your application, like `https://tungsten-demo.drewrat.dev`. Defaults to `http://localhost:3000`.
-- `NEXT_PUBLIC_ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
+- `ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
 
 For Docker compose...
 - Clone the repo
@@ -35,10 +35,23 @@ docker run -d \
 	-p 3000:3000 \
 	-e AUTH_SECRET="[secret]" \
 	-e AUTH_URL="[url of application]" \
-	-e NEXT_PUBLIC_ALLOW_SIGNUPS="true" \
+	-e ALLOW_SIGNUPS="true" \
 	ghcr.io/mrdiamonddog/tungsten:master
 ```
 Make sure to fill out the env vars in the \[brackets]
+
+Or without docker...
+- Clone the repo
+	- `git clone https://github.com/mrdiamonddog/tungsten`
+- Copy `.env.example` to `.env` and fill out the values, described above
+- Install dependencies
+	- `pnpm i`
+- Init the database
+	- `pnpm exec drizzle-kit push`
+- Build the app
+	- `pnpm build`
+- Run it
+	- `pnpm start`
 
 > [!INFO]
 > Docker Compose is recommended as it makes updating and managing the Tungsten container easier.
@@ -59,3 +72,9 @@ To update:
 	- `docker compose pull && docker compose up -d`
 - Standalone
 	- Re-run the command in the [Installation](#Installation) section with `--pull always`.
+- Without Docker
+	- `git fetch && git pull`
+	- `pnpm start`
+
+If the update includes a database migration, run this command and follow the prompts.
+- `docker exec -it tungsten pnpm exec drizzle-kit push`

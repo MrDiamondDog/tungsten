@@ -4,6 +4,7 @@ import Button from "@/components/primitives/Button";
 import Divider from "@/components/primitives/Divider";
 import Input from "@/components/primitives/Input";
 import LinkButton from "@/components/primitives/LinkButton";
+import { getPublicEnv } from "@/public-env";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -88,7 +89,7 @@ export default function HomePage() {
 				<Button onClick={signup} loading={loading}>Sign Up</Button>}
 			{error && <p className="text-ctp-red text-wrap overflow-hidden">{error}</p>}
 		</div>
-		{process.env.NEXT_PUBLIC_ALLOW_SIGNUPS !== "true" ? <p>The admin of the application has disabled sign ups.</p> :
+		{getPublicEnv().ALLOW_SIGNUPS !== "true" ? <p>The admin of the application has disabled sign ups.</p> :
 			<LinkButton onClick={() => setMode(mode === "signup" ? "signin" : "signup")}>
 				{mode === "signup" ? "Already have an account?" : "Don't have an account?"}
 			</LinkButton>}

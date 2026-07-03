@@ -13,7 +13,7 @@ export async function getContent(nodeId: string): ActionRes<FileContent> {
 	if (!user?.user)
 		return { error: "Not authenticated" };
 
-	if (process.env.NEXT_PUBLIC_IS_DEMO === "true" && nodeId !== "0")
+	if (process.env.IS_DEMO === "true" && nodeId !== "0")
 		return {
 			data: {
 				id: randomUUID(),
@@ -46,7 +46,7 @@ export async function editContent(nodeId: string, newContent: string): ActionRes
 	if (!user?.user)
 		return { error: "Not authenticated" };
 
-	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+	if (process.env.IS_DEMO === "true")
 		return {
 			data: {
 				id: randomUUID(),

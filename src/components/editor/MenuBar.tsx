@@ -27,7 +27,7 @@ export default function MenuBar() {
 	const { viewMode } = useEditor();
 	const dispatch = useEditorDispatch();
 
-	if (process.env.NEXT_PUBLIC_IS_DEMO === "true")
+	if (process.env.IS_DEMO === "true")
 		return null;
 
 	async function onCreate(type: "folder" | "file") {
