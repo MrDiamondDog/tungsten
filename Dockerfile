@@ -32,8 +32,11 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV CI=true
 
-VOLUME /app/tungsten.db
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+RUN pnpm exec drizzle-kit push
+VOLUME /app/tungsten.db
+
 RUN pnpm run build
 
 # Production image, copy all the files and run next
