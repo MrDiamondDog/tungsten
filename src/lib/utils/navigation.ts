@@ -43,3 +43,9 @@ export function nodeFromPath(tree: FileTree, path: string[]): Node | undefined {
 
 	return currentNode;
 }
+
+export function folderContents(nodes: Node[], folderId?: string | null) {
+	if (folderId === "__REACT_ARBORIST_INTERNAL_ROOT__")
+		folderId = null;
+	return nodes.filter(n => (!folderId ? !n.parentNode : n.parentNode === folderId));
+}

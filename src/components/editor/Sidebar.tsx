@@ -9,6 +9,7 @@ import { createNode, deleteNode, editNode, editNodesBulk } from "@/actions/nodes
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../primitives/ContextMenu";
 import Input from "../primitives/Input";
 import { Node } from "@/db/types";
+import { folderContents } from "@/lib/utils/navigation";
 
 export function SidebarFile({
 	data,
@@ -94,6 +95,11 @@ export default function Sidebar() {
 	const [tree, setTree] = useState<FileTree>();
 
 	const treeRef = useRef<TreeApi<TreeItem> | undefined>(undefined);
+	const nodeListRef = useRef(nodes);
+
+	useEffect(() => {
+		nodeListRef.current = nodes;
+	}, [nodes]);
 
 	function onFileClick(file: Node) {
 		dispatch?.({ type: "open-file", file: file.id });
@@ -105,26 +111,34 @@ export default function Sidebar() {
 		if (!tree)
 			return;
 
-		const treeData = new SimpleTree(tree);
+		const treeData = new SimpleTree(getTree(nodeListRef.current));
 		for (const id of dragIds) {
 			treeData.move({ id, parentId, index });
 		}
 
-		const newTree: FileTree = treeData.data;
+		const newTree: FileTree = [...treeData.data];
 
-		function updateNodes(nodes: TreeItem[], parentNode?: string) {
+		function updateNodes(nodes: TreeItem[], parentNode?: string): boolean {
 			for (let i = 0; i < nodes.length; i++) {
 				const node = nodes[i];
+				if (nodes.filter(n => n.id !== node.id).map(n => n.name)
+					.includes(node.name))
+					return false;
+
 				node.index = i;
 				node.parentNode = parentNode ?? null;
 				if (node.nodeType === "folder") {
 					node.children = node.children ?? [];
-					updateNodes(node.children, node.id);
+					if (!updateNodes(node.children, node.id))
+						return false;
 				}
 			}
+			return true;
 		}
 
-		updateNodes(newTree);
+		if (!updateNodes(newTree))
+			return;
+
 		setTree(newTree);
 
 		const newNodes = flattenTree(newTree);
@@ -137,16 +151,26 @@ export default function Sidebar() {
 		if (!name)
 			name = `New ${node.isLeaf ? "File" : "Folder"}`;
 
+		if (folderContents(nodeListRef.current, node.parent?.id).find(n => n.name === name))
+			return;
+
 		dispatch?.({ type: "edit-node", node: { ...node.data, name } });
 		editNode(node.data.id, { ...node.data, name });
 	};
 
 	// eslint-disable-next-line func-style
 	const onCreate: CreateHandler<TreeItem> = async ({ index, parentId, type }) => {
+		let name = `New ${type === "leaf" ? "File" : "Folder"}`;
+		let i = 1;
+		while (folderContents(nodeListRef.current, parentId).find(n => n.name === name)) {
+			name = `New ${type === "leaf" ? "File" : "Folder"} ${i}`;
+			i++;
+		}
+
 		const nodeData = {
 			parentNode: parentId,
 			nodeType: (type === "leaf" ? "file" : "folder") as "file" | "folder",
-			name: `New ${type === "leaf" ? "File" : "Folder"}`,
+			name,
 		};
 
 		const newNode = await createNode(nodeData, index).then(res => {
