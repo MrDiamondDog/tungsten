@@ -1,5 +1,5 @@
 import { Node } from "@/db/types";
-import { FileTree } from "./data";
+import { FileTree, TreeItem } from "./data";
 
 export function getFileUrl(node: Node, nodes: Node[]) {
 	const path: Node[] = [node];
@@ -26,4 +26,20 @@ export function getAllFilePaths(tree: FileTree, path?: string): string[] {
 	}
 
 	return paths;
+}
+
+export function nodeFromPath(tree: FileTree, path: string[]): Node | undefined {
+	let currentNode: TreeItem | undefined = undefined;
+	let currentTree = tree;
+
+	for (const node of path) {
+		console.log(node, currentTree);
+		currentNode = currentTree.find(n => n.name === node);
+		if (!currentNode)
+			break;
+		if (currentNode.nodeType === "folder")
+			currentTree = currentNode.children ?? [];
+	}
+
+	return currentNode;
 }

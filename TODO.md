@@ -15,7 +15,7 @@
 - [x] Expand menubar
 - [x] Demo mode
 - [x] Landing page (only in demo mode preferably)
-- [ ] Fix cross page links
+- [x] Fix cross page links
 - [ ] File name restrictions (no files/folders with same name in same folder)
 - [ ] Options page
 - [ ] Good error handling

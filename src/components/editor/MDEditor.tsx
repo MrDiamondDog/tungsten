@@ -38,7 +38,7 @@ import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
 import { MathfieldElement } from "mathlive";
 import uploadImage from "@/actions/images";
 import Spinner from "../primitives/Spinner";
-import { getAllFilePaths } from "@/lib/utils/navigation";
+import { getAllFilePaths, nodeFromPath } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 
 export default function MDEditor() {
@@ -53,6 +53,12 @@ export default function MDEditor() {
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
+
+	const nodeListRef = useRef(nodes);
+
+	useEffect(() => {
+		nodeListRef.current = nodes;
+	}, [nodes]);
 
 	function save() {
 		if (!file)
@@ -191,9 +197,16 @@ export default function MDEditor() {
 							onClickLinkCallback: (link: string) => {
 								if (link.startsWith("http"))
 									return void window.open(link);
-								if (link.startsWith("/"))
-									// TODO: handle this
+								if (link.startsWith("/")) {
+									const path = link.slice(1).split("/");
+									const node = nodeFromPath(getTree(nodeListRef.current), path);
+									console.log(node);
+									if (node && node.nodeType === "file") {
+										dispatch?.({ type: "open-file", file: node.id });
+										dispatch?.({ type: "select-file", file: node.id });
+									}
 									return;
+								}
 							},
 						}),
 						imagePlugin({
