@@ -19,7 +19,6 @@
 -[ ] File name restrictions (no files/folders with same name in same folder)
 -[ ] Options page
 -[ ] Good error handling
--[ ] Videos
 
 ## EXTRAS
 -[ ] Export files as HTML or Markdown
@@ -31,6 +30,7 @@
 -[ ] Custom emojis?
 -[ ] Wikilinks?
 -[ ] Theme switcher?
+-[ ] Videos
 
 ## BUGS
 -[x] Changing tabs with unsaved content clears unsaved content

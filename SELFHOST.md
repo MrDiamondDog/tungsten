@@ -9,7 +9,12 @@ Your one-stop guide for self hosting Tungsten!
 
 ## Setup
 
-Tungsten is a Next.JS app using Drizzle ORM with a local sqlite3 database.
+Tungsten is a Next.JS app using Drizzle ORM. A volume is created to store the database and uploaded images.
+
+> [!NOTE]
+> Authentication is email + password only. Passwords are hashed and salted in the database with a secret you generate. Keep this safe!
+>
+> Additionally, images are stored as plain files, but only accessible to users through an API route that checks if they own the image they are accessing.
 
 ## Installation
 
@@ -24,8 +29,10 @@ The image uses the following env variables:
 - `ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
 - `IMAGE_MAX_SIZE`: The max size for uploaded images. Defaults to `10mb`. Supported units: `b`, `kb`, `mb`, `gb`
 
-
 ### Docker Compose
+
+> [!NOTE]
+> Docker Compose is recommended as it makes updating and managing the Tungsten container easier.
 
 - Clone the repo
 	- `git clone https://github.com/mrdiamonddog/tungsten`
@@ -48,6 +55,9 @@ Make sure to fill out the env vars in the \[brackets]! (Any optional envs not li
 
 ### Without Docker
 
+> [!WARNING]
+> You should really only use this option if you're going to be making changes to the code, as it's a lot harder to manage.
+
 - Clone the repo
 	- `git clone https://github.com/mrdiamonddog/tungsten`
 - Copy `.env.example` to `.env` and fill out the values, described above
@@ -59,9 +69,6 @@ Make sure to fill out the env vars in the \[brackets]! (Any optional envs not li
 	- `pnpm build`
 - Run it
 	- `pnpm start`
-
-> [!NOTE]
-> Docker Compose is recommended as it makes updating and managing the Tungsten container easier.
 
 Now Tungsten should be running on port 3000!
 
