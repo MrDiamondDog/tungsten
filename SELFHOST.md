@@ -13,6 +13,8 @@ Tungsten is a Next.JS app using Drizzle ORM with a local sqlite3 database.
 
 ## Installation
 
+### Enviornment
+
 The image uses the following env variables:
 - `AUTH_SECRET` (REQUIRED): The secret that hashes passwords. Use one of the following commands to get the secret. Just copy the value, not `BETTER_AUTH_SECRET`.
 	- `npx auth secret`
@@ -21,14 +23,17 @@ The image uses the following env variables:
 - `AUTH_URL`: The URL of your application, like `https://tungsten-demo.drewrat.dev`. Defaults to `http://localhost:3000`.
 - `ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
 
-For Docker compose...
+
+### Docker Compose
+
 - Clone the repo
 	- `git clone https://github.com/mrdiamonddog/tungsten`
 - Copy `.env.example` to `.env` and fill out the values, described above
 - Run Docker compose
 	- `docker compose up -d`
 
-Or standalone...
+### Standalone
+
 ```bash
 docker run -d \
 	--name tungsten \
@@ -40,7 +45,8 @@ docker run -d \
 ```
 Make sure to fill out the env vars in the \[brackets]
 
-Or without docker...
+### Without Docker
+
 - Clone the repo
 	- `git clone https://github.com/mrdiamonddog/tungsten`
 - Copy `.env.example` to `.env` and fill out the values, described above
@@ -53,7 +59,7 @@ Or without docker...
 - Run it
 	- `pnpm start`
 
-> [!INFO]
+> [!NOTE]
 > Docker Compose is recommended as it makes updating and managing the Tungsten container easier.
 
 Now Tungsten should be running on port 3000!

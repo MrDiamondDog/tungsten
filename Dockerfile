@@ -27,7 +27,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 FROM base AS builder
 
 WORKDIR /app
-COPY --from=deps /app/drizzle.config.ts ./drizzle.config.ts
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -48,8 +47,8 @@ COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/tungsten.db ./tungsten.db
 COPY --from=builder /app/src/db/schema.ts ./src/db/schema.ts
 
-COPY package.json pnpm-*.yaml* ./
 COPY patches/ ./patches/
+RUN pnpm i drizzle-orm drizzle-kit @libsql/client --allow-build=esbuild
 RUN pnpm exec drizzle-kit push
 
 # Automatically leverage output traces to reduce image size
