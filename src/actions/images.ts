@@ -20,14 +20,11 @@ export default async function uploadImage(image: File): ActionRes<string> {
 
 	const uuid = randomUUID();
 
-	if (!existsSync("./images"))
-		mkdirSync("./images");
-
-	if (!existsSync(`./images/${user.user.id}`))
-		mkdirSync(`./images/${user.user.id}`);
+	if (!existsSync(`./data/images/${user.user.id}`))
+		mkdirSync(`./data/images/${user.user.id}`, { recursive: true });
 
 	const fileName = `${uuid}.${image.type.split("/")[1]}`;
-	writeFileSync(`./images/${user.user.id}/${fileName}`, await image.bytes());
+	writeFileSync(`./data/images/${user.user.id}/${fileName}`, await image.bytes());
 
 	await db.insert(images).values({ fileName, userId: user.user.id! });
 

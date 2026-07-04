@@ -2,11 +2,16 @@ name: Tungsten
 services:
     tungsten:
         container_name: tungsten
+        build: .
         ports:
             - 3000:3000
         environment:
             - AUTH_SECRET=${AUTH_SECRET}
             - AUTH_URL=${AUTH_URL}
             - ALLOW_SIGNUPS=${ALLOW_SIGNUPS}
+            - IMAGE_MAX_SIZE=${IMAGE_MAX_SIZE}
+        volumes:
+            - db:/app/data/
         env_file: ".env"
-        image: ghcr.io/mrdiamonddog/tungsten:master
+volumes:
+    db:

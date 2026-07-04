@@ -13,5 +13,5 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/api/image/[filen
 	if (!filename)
 		return new NextResponse("Not found", { status: 404 });
 
-	return new NextResponse(readFileSync(`./images/${user.user.id}/${filename}`));
+	return new NextResponse(readFileSync(`./data/images/${user.user.id}/${filename}`));
 }

@@ -13,7 +13,7 @@ Tungsten is a Next.JS app using Drizzle ORM with a local sqlite3 database.
 
 ## Installation
 
-### Enviornment
+### Environment
 
 The image uses the following env variables:
 - `AUTH_SECRET` (REQUIRED): The secret that hashes passwords. Use one of the following commands to get the secret. Just copy the value, not `BETTER_AUTH_SECRET`.
@@ -22,6 +22,7 @@ The image uses the following env variables:
 	- `yarn dlx auth secret`
 - `AUTH_URL`: The URL of your application, like `https://tungsten-demo.drewrat.dev`. Defaults to `http://localhost:3000`.
 - `ALLOW_SIGNUPS`: If your application allows signups. Recommended to run with `true`, make your user, then restart with `false`. Defaults to `false`.
+- `IMAGE_MAX_SIZE`: The max size for uploaded images. Defaults to `10mb`. Supported units: `b`, `kb`, `mb`, `gb`
 
 
 ### Docker Compose
@@ -43,7 +44,7 @@ docker run -d \
 	-e ALLOW_SIGNUPS="true" \
 	ghcr.io/mrdiamonddog/tungsten:master
 ```
-Make sure to fill out the env vars in the \[brackets]
+Make sure to fill out the env vars in the \[brackets]! (Any optional envs not listed can be added with `-e NAME="value"`)
 
 ### Without Docker
 
@@ -83,4 +84,4 @@ To update:
 	- `pnpm start`
 
 If the update includes a database migration, run this command and follow the prompts.
-- `docker exec -it tungsten pnpm exec drizzle-kit push`
+- `docker exec -it tungsten pnpm exec drizzle-kit push --allow-build=esbuild`

@@ -32,8 +32,13 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV CI=true
 
+RUN mkdir /app/data
+
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm exec drizzle-kit push
 RUN pnpm run build
+
+RUN rm /app/package.json
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -44,12 +49,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
-COPY --from=builder /app/tungsten.db ./tungsten.db
+COPY --from=builder /app/data ./data
 COPY --from=builder /app/src/db/schema.ts ./src/db/schema.ts
-
-COPY patches/ ./patches/
-RUN pnpm i drizzle-orm drizzle-kit @libsql/client --allow-build=esbuild
-RUN pnpm exec drizzle-kit push
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

@@ -19,6 +19,7 @@
 -[ ] File name restrictions (no files/folders with same name in same folder)
 -[ ] Options page
 -[ ] Good error handling
+-[ ] Videos
 
 ## EXTRAS
 -[ ] Export files as HTML or Markdown

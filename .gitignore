@@ -44,4 +44,4 @@ tungsten.db
 src/db/types.d.ts
 tungsten.db-journal
 
-images/
+data/
