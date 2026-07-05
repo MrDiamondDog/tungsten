@@ -138,7 +138,7 @@ export default function Sidebar() {
 		}
 
 		if (!updateNodes(newTree))
-			throwToast("Could not move items", "Two files with the same name can not be in the same folder.");
+			throwToast("Could not move items", "Folder contains item of the same name.");
 
 		setTree(newTree);
 
@@ -152,7 +152,8 @@ export default function Sidebar() {
 		if (!name)
 			name = `New ${node.isLeaf ? "File" : "Folder"}`;
 
-		if (folderContents(nodeListRef.current, node.parent?.id).find(n => n.name === name))
+		if (folderContents(nodeListRef.current, node.parent?.id).filter(n => n.id !== node.id)
+			.find(n => n.name === name))
 			throwToast("Folder contains item of the same name.");
 
 		editNode(node.data.id, { ...node.data, name }).catch(e => throwToast("Unable to edit node", e));
