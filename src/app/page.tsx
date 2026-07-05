@@ -2,6 +2,7 @@
 
 import Button, { ButtonLooks } from "@/components/primitives/Button";
 import Divider from "@/components/primitives/Divider";
+import { useTheme } from "@/components/theme/ThemeContext";
 import { getPublicEnv } from "@/public-env";
 import { ChevronDown } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -16,6 +17,7 @@ export function LandingDetail({ image, children, reverse }: { image: string, rev
 }
 
 export default function LandingPage() {
+	const { theme } = useTheme();
 	const demo = getPublicEnv().IS_DEMO === "true";
 
 	async function demoLogin() {
@@ -25,7 +27,7 @@ export default function LandingPage() {
 		await signIn("credentials", { email, password, redirectTo: "/editor" });
 	}
 
-	return <main className="w-full h-full overflow-x-hidden">
+	return <main className={`w-full h-full overflow-x-hidden ${theme} text-ctp-text`}>
 		<div className="w-full h-screen bg-linear-to-br from-ctp-mantle to-ctp-surface0 relative">
 			<div className="absolute-center text-center">
 				<h1 className="flex gap-1 items-center w-full justify-center"><img src="/tungsten.svg" width={50} height={50} /> Tungsten</h1>

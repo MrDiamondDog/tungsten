@@ -32,7 +32,7 @@ import { useEffect, useRef, useState } from "react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { Node } from "@/db/types";
 import { editContent, getContent } from "@/actions/content";
-import { catppuccinMocha } from "@fsegurai/codemirror-theme-bundle";
+import { catppuccinMocha, githubLight } from "@fsegurai/codemirror-theme-bundle";
 import { languages } from "@codemirror/language-data";
 import { InsertMathButton, mathEditorDescriptor } from "./MathEditor";
 import { MathfieldElement } from "mathlive";
@@ -40,6 +40,7 @@ import uploadImage from "@/actions/images";
 import Spinner from "../primitives/Spinner";
 import { getAllFilePaths, nodeFromPath } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent, unsavedFiles, viewMode } = useEditor();
@@ -50,6 +51,8 @@ export default function MDEditor() {
 	const content = useRef("");
 
 	const [saved, setSaved] = useState(true);
+
+	const { theme } = useTheme();
 
 	const dispatch = useEditorDispatch();
 	const editorRef = useRef<MDXEditorMethods>(null);
@@ -216,7 +219,7 @@ export default function MDEditor() {
 						}),
 						codeMirrorPlugin({
 							codeBlockLanguages: languages,
-							codeMirrorExtensions: [catppuccinMocha],
+							codeMirrorExtensions: [theme !== "latte" ? catppuccinMocha : githubLight],
 						}),
 						tablePlugin(),
 						jsxPlugin({ jsxComponentDescriptors: [mathEditorDescriptor] }),

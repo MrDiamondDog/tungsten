@@ -16,7 +16,8 @@
 - [x] Demo mode
 - [x] Landing page (only in demo mode preferably)
 - [x] Fix cross page links
-- [ ] File name restrictions (no files/folders with same name in same folder)
+- [x] File name restrictions (no files/folders with same name in same folder)
+- [x] Theme switcher
 - [ ] Options page
 - [ ] Good error handling
 
@@ -29,8 +30,7 @@
 ## LATER/MAYBE
 - [ ] Custom emojis?
 - [ ] Wikilinks?
-- [ ] Theme switcher?
-- [ ] Videos
+- [ ] Videos?
 
 ## BUGS
 - [x] Changing tabs with unsaved content clears unsaved content

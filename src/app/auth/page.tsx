@@ -4,6 +4,7 @@ import Button from "@/components/primitives/Button";
 import Divider from "@/components/primitives/Divider";
 import Input from "@/components/primitives/Input";
 import LinkButton from "@/components/primitives/LinkButton";
+import { useTheme } from "@/components/theme/ThemeContext";
 import { getPublicEnv } from "@/public-env";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -11,6 +12,7 @@ import { useEffect, useState } from "react";
 
 export default function HomePage() {
 	const searchParams = useSearchParams();
+	const { theme } = useTheme();
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(searchParams.has("error") ? "Invalid email or password." : "");
@@ -77,21 +79,23 @@ export default function HomePage() {
 		});
 	}
 
-	return <main className="absolute-center border border-ctp-surface0 p-4 w-75">
-		<h2>{mode === "signin" ? "Log In" : "Sign Up"}</h2>
-		<Divider />
-		<div className="flex flex-col gap-1">
-			<Input placeholder="Email" type="email" onChange={setEmail} value={email} />
-			<Input placeholder="Password" type="password" onChange={setPassword} value={password} />
-			{mode === "signup" &&
-				<Input placeholder="Confirm Password" type="password" onChange={setConfirmPassword} value={confirmPassword} />}
-			{mode === "signin" ? <Button onClick={login} loading={loading}>Log In</Button> :
-				<Button onClick={signup} loading={loading}>Sign Up</Button>}
-			{error && <p className="text-ctp-red text-wrap overflow-hidden">{error}</p>}
-		</div>
-		{getPublicEnv().ALLOW_SIGNUPS !== "true" ? <p>The admin of the application has disabled sign ups.</p> :
-			<LinkButton onClick={() => setMode(mode === "signup" ? "signin" : "signup")}>
-				{mode === "signup" ? "Already have an account?" : "Don't have an account?"}
-			</LinkButton>}
-	</main>;
+	return <div className={`w-screen h-screen overflow-hidden bg-ctp-base ${theme}`}>
+		<main className="absolute-center bg-ctp-base text-ctp-text border border-ctp-surface0 p-4 w-75">
+			<h2>{mode === "signin" ? "Log In" : "Sign Up"}</h2>
+			<Divider />
+			<div className="flex flex-col gap-1">
+				<Input placeholder="Email" type="email" onChange={setEmail} value={email} />
+				<Input placeholder="Password" type="password" onChange={setPassword} value={password} />
+				{mode === "signup" &&
+					<Input placeholder="Confirm Password" type="password" onChange={setConfirmPassword} value={confirmPassword} />}
+				{mode === "signin" ? <Button onClick={login} loading={loading}>Log In</Button> :
+					<Button onClick={signup} loading={loading}>Sign Up</Button>}
+				{error && <p className="text-ctp-red text-wrap overflow-hidden">{error}</p>}
+			</div>
+			{getPublicEnv().ALLOW_SIGNUPS !== "true" ? <p>The admin of the application has disabled sign ups.</p> :
+				<LinkButton onClick={() => setMode(mode === "signup" ? "signin" : "signup")}>
+					{mode === "signup" ? "Already have an account?" : "Don't have an account?"}
+				</LinkButton>}
+		</main>
+	</div>;
 }

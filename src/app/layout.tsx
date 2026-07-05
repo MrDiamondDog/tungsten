@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
 import Spinner from "@/components/primitives/Spinner";
 import { PublicEnv } from "@/public-env";
+import { ThemeProvider } from "@/components/theme/ThemeContext";
 
 const lexend = Lexend({
 	variable: "--font-lexend",
@@ -54,7 +55,9 @@ export default function RootLayout({
 				<SessionProvider>
 					<Suspense fallback={<Spinner />}>
 						<PublicEnv />
-						{children}
+						<ThemeProvider>
+							{children}
+						</ThemeProvider>
 					</Suspense>
 				</SessionProvider>
 

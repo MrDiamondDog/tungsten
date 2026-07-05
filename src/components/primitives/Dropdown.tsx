@@ -19,6 +19,7 @@ import {
 	DropdownMenuTriggerProps,
 } from "@radix-ui/react-dropdown-menu";
 import { ChevronRight, Dot } from "lucide-react";
+import { useTheme } from "../theme/ThemeContext";
 
 export function Dropdown(props: DropdownMenuProps) {
 	return (<DropdownMenu {...props}>
@@ -33,9 +34,11 @@ export function DropdownTrigger(props: DropdownMenuTriggerProps) {
 }
 
 export function DropdownContent(props: DropdownMenuContentProps) {
+	const { theme } = useTheme();
+
 	return (<DropdownMenuPortal>
 		<DropdownMenuContent {...props}
-			className={`${props.className ?? ""} bg-ctp-mantle border border-ctp-surface0 p-2 min-w-40 shadow-md z-20`}>
+			className={`${props.className ?? ""} ${theme} bg-ctp-mantle text-ctp-text border border-ctp-surface0 p-2 min-w-40 shadow-md z-20`}>
 			{props.children}
 		</DropdownMenuContent>
 	</DropdownMenuPortal>);
