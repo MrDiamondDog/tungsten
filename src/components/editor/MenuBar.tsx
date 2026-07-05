@@ -8,6 +8,7 @@ import { signOut } from "next-auth/react";
 import { useEditor, useEditorDispatch } from "./EditorContext";
 import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
 import { Theme, useTheme } from "../theme/ThemeContext";
+import { throwToast } from "@/lib/utils/errors";
 
 export function MenuBarItem({ trigger, ...props }: { trigger: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return <Dropdown>
@@ -39,12 +40,7 @@ export default function MenuBar() {
 			name: `New ${type === "file" ? "File" : "Folder"}`,
 		};
 
-		const newNode = await createNode(nodeData).then(res => {
-			if (res.error)
-				throw res.error;
-
-			return res.data!;
-		});
+		const newNode = await createNode(nodeData).catch(e => throwToast("Could not create node", e));
 
 		dispatch?.({ type: "create-node", node: newNode });
 	}

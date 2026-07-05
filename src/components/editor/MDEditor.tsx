@@ -42,6 +42,7 @@ import { getAllFilePaths, nodeFromPath } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 import { useTheme } from "../theme/ThemeContext";
 import { getPublicEnv } from "@/public-env";
+import { error, throwToast } from "@/lib/utils/errors";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent, unsavedFiles, viewMode } = useEditor();
@@ -73,9 +74,10 @@ export default function MDEditor() {
 
 		// console.log("content to save", content.current);
 
-		console.log(file.name, content.current);
-
-		editContent(file.id, content.current);
+		editContent(file.id, content.current).catch(e => {
+			setSaved(false);
+			throwToast("Could not save file", e);
+		});
 		dispatch?.({ type: "cache-content", content: content.current, nodeId: file.id });
 		setSaved(true);
 
@@ -117,12 +119,9 @@ export default function MDEditor() {
 
 		new Promise<string>(resolve => {
 			if (cachedContent[selectedFile] === null || cachedContent[selectedFile] === undefined) {
-				getContent(selectedFile).then(res => {
-					if (res.error)
-						return "";
-					return res.data!.content;
-				})
-					.then(resolve);
+				getContent(selectedFile)
+					.then(res => resolve(res.content))
+					.catch(e => throwToast("Could not fetch content", e));
 			} else
 				resolve(cachedContent[selectedFile]);
 		}).then(newContent => {
@@ -216,8 +215,8 @@ export default function MDEditor() {
 						imagePlugin({
 							imageUploadHandler: async file => {
 								if ((file.size / 1024 / 1024) > parseInt(getPublicEnv().IMAGE_MAX_SIZE))
-									throw "Image too large.";
-								return (await uploadImage(file)).data!;
+									throw error(`Image too large. Must be <${getPublicEnv().IMAGE_MAX_SIZE}mb.`);
+								return await uploadImage(file).catch(e => throwToast("Could not upload image", e));
 							},
 							disableImageSettingsButton: true,
 							imagePlaceholder: () => <Spinner className="size-30 p-10 bg-ctp-surface0" />,

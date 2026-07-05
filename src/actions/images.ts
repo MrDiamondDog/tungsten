@@ -8,18 +8,18 @@ import { db, images } from "@/db/schema";
 
 export default async function uploadImage(image: File): ActionRes<string> {
 	if (process.env.IS_DEMO === "true")
-		return { error: "Image uploading is disabled in the demo." };
+		throw "Image uploading is disabled in the demo.";
 
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	if ((image.size / 1024 / 1024) > (parseInt(process.env.IMAGE_MAX_SIZE ?? "20")))
-		return { error: `File is too large (must be less than ${process.env.IMAGE_MAX_SIZE}mb)` };
+		throw `File is too large (must be less than ${process.env.IMAGE_MAX_SIZE}mb)`;
 
 	if (!image || !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(image.type))
-		return { error: "Invalid fields" };
+		throw "Invalid fields";
 
 	const uuid = randomUUID();
 
@@ -31,5 +31,5 @@ export default async function uploadImage(image: File): ActionRes<string> {
 
 	await db.insert(images).values({ fileName, userId: user.user.id! });
 
-	return { data: `/api/image/${fileName}` };
+	return `/api/image/${fileName}`;
 }

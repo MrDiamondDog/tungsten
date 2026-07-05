@@ -5,6 +5,7 @@ import Divider from "@/components/primitives/Divider";
 import Input from "@/components/primitives/Input";
 import LinkButton from "@/components/primitives/LinkButton";
 import { useTheme } from "@/components/theme/ThemeContext";
+import { throwToast } from "@/lib/utils/errors";
 import { getPublicEnv } from "@/public-env";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -37,7 +38,7 @@ export default function HomePage() {
 			redirectTo: "/editor",
 			email,
 			password,
-		});
+		}).catch(e => throwToast("Unable to sign in", e));
 	}
 
 	async function signup() {
@@ -62,13 +63,13 @@ export default function HomePage() {
 				if (json.error) {
 					setLoading(false);
 					setError(json.error);
-					throw json.error;
+					throwToast("Unable to create account", json.error);
 				}
 			})
 			.catch(e => {
 				setLoading(false);
 				setError("Something went wrong. Please check the console.");
-				throw e;
+				throwToast("Unable to create account", e);
 			});
 
 		await signIn("credentials", {

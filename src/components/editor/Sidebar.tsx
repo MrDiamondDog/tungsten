@@ -10,6 +10,7 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator,
 import Input from "../primitives/Input";
 import { Node } from "@/db/types";
 import { folderContents } from "@/lib/utils/navigation";
+import { throwToast } from "@/lib/utils/errors";
 
 export function SidebarFile({
 	data,
@@ -28,7 +29,7 @@ export function SidebarFile({
 	const dispatch = useEditorDispatch();
 
 	function onDelete() {
-		deleteNode(data.id);
+		deleteNode(data.id).catch(e => throwToast("Could not delete node", e));
 		dispatch?.({ type: "delete-node", node: data });
 	}
 
@@ -137,13 +138,13 @@ export default function Sidebar() {
 		}
 
 		if (!updateNodes(newTree))
-			return;
+			throwToast("Could not move items", "Two files with the same name can not be in the same folder.");
 
 		setTree(newTree);
 
 		const newNodes = flattenTree(newTree);
+		editNodesBulk(newNodes).catch(e => throwToast("Unable to edit nodes", e));
 		dispatch?.({ type: "set-nodes", nodes: newNodes });
-		editNodesBulk(newNodes);
 	};
 
 	// eslint-disable-next-line func-style
@@ -152,10 +153,10 @@ export default function Sidebar() {
 			name = `New ${node.isLeaf ? "File" : "Folder"}`;
 
 		if (folderContents(nodeListRef.current, node.parent?.id).find(n => n.name === name))
-			return;
+			throwToast("Folder contains item of the same name.");
 
+		editNode(node.data.id, { ...node.data, name }).catch(e => throwToast("Unable to edit node", e));
 		dispatch?.({ type: "edit-node", node: { ...node.data, name } });
-		editNode(node.data.id, { ...node.data, name });
 	};
 
 	// eslint-disable-next-line func-style
@@ -173,12 +174,7 @@ export default function Sidebar() {
 			name,
 		};
 
-		const newNode = await createNode(nodeData, index).then(res => {
-			if (res.error)
-				throw res.error;
-
-			return res.data!;
-		});
+		const newNode = await createNode(nodeData, index).catch(e => throwToast("Could not create node", e));
 
 		dispatch?.({ type: "create-node", node: newNode });
 		return newNode;

@@ -2,6 +2,7 @@
 
 import { getNodes } from "@/actions/nodes";
 import { Node } from "@/db/types";
+import { throwToast } from "@/lib/utils/errors";
 import { ActionDispatch, createContext, useContext, useEffect, useReducer } from "react";
 
 export type EditorData = {
@@ -110,10 +111,8 @@ export function EditorProvider({ children }: React.PropsWithChildren) {
 	const [data, dispatch] = useReducer(editorReducer, defaultEditorData);
 
 	useEffect(() => {
-		getNodes().then(res => {
-			if (!res.error)
-				dispatch?.({ type: "set-nodes", nodes: res.data! });
-		});
+		getNodes().then(res => dispatch?.({ type: "set-nodes", nodes: res }))
+			.catch(e => throwToast("Unable to fetch nodes", e));
 	}, []);
 
 	return (<EditorContext value={data}>

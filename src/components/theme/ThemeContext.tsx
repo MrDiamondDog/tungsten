@@ -14,7 +14,11 @@ export function useTheme() {
 }
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
-	const [theme, setTheme] = useState(localStorage?.getItem("theme") as Theme ?? "mocha");
+	const [theme, setTheme] = useState<Theme>("mocha");
+
+	useEffect(() => {
+		setTheme((localStorage.getItem("theme") ?? "mocha") as Theme);
+	}, []);
 
 	useEffect(() => {
 		localStorage.setItem("theme", theme);

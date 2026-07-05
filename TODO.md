@@ -18,7 +18,7 @@
 - [x] Fix cross page links
 - [x] File name restrictions (no files/folders with same name in same folder)
 - [x] Theme switcher
-- [ ] Good error handling
+- [x] Good error handling
 
 ## EXTRAS
 - [ ] Export files as HTML or Markdown
@@ -42,5 +42,5 @@
 - [x] Lag when switching tabs (mostly gone when not in dev)
 - [x] Can't focus math editor without clicking in (similarly, can't unfocus) (unfixable, but at least when you create it it gets focused)
 - ~~Undo/redo issues when switching files (just try to obliterate the history when switching files)~~ literally not possible because mdxeditor is a bitch
-- [ ] Don't bake file size limit into docker image (do it in server action)
+- [x] Don't bake file size limit into docker image (do it in server action)
 - [ ] Extraneous newlines get obliterated

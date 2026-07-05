@@ -3,6 +3,7 @@
 import Button, { ButtonLooks } from "@/components/primitives/Button";
 import Divider from "@/components/primitives/Divider";
 import { useTheme } from "@/components/theme/ThemeContext";
+import { throwToast } from "@/lib/utils/errors";
 import { getPublicEnv } from "@/public-env";
 import { ChevronDown } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -24,7 +25,8 @@ export default function LandingPage() {
 		const email = "demo@tungsten.app";
 		const password = "demodemo";
 
-		await signIn("credentials", { email, password, redirectTo: "/editor" });
+		await signIn("credentials", { email, password, redirectTo: "/editor" })
+			.catch(e => throwToast("Unable to sign in", e));
 	}
 
 	return <main className={`w-full h-full overflow-x-hidden ${theme} text-ctp-text`}>

@@ -11,25 +11,25 @@ export async function getNodes(): ActionRes<Node[]> {
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	const nodeList = await db.select().from(nodes)
 		.where(eq(nodes.userId, user.user.id!));
 
-	return { data: nodeList };
+	return nodeList;
 }
 
 export async function createNode(data: Omit<Node, "id" | "userId" | "index">, index?: number): ActionRes<Node> {
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	if (!data.name)
-		return { error: "Please fill out all fields" };
+		throw "Please fill out all fields";
 
 	if (data.nodeType !== "file" && data.nodeType !== "folder") {
-		return { error: "Invalid node type." };
+		throw "Invalid node type.";
 	}
 
 	if (!index) {
@@ -42,23 +42,19 @@ export async function createNode(data: Omit<Node, "id" | "userId" | "index">, in
 
 	if (process.env.IS_DEMO === "true") {
 		return {
-			data: {
-				...data,
-				id: randomUUID(),
-				userId: user.user.id!,
-				index,
-			},
+			...data,
+			id: randomUUID(),
+			userId: user.user.id!,
+			index,
 		};
 	}
 
-	const node = await db.insert(nodes).values({
+	const node = (await db.insert(nodes).values({
 		...data,
 		index,
 		userId: user.user.id!,
 	})
-		.returning()
-		.then(res => ({ data: res[0] }))
-		.catch(e => ({ error: e.toString() }));
+		.returning())[0];
 
 	return node;
 }
@@ -67,32 +63,32 @@ export async function editNode(id: string, newNode: Node): ActionRes<Node> {
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	const node = (await db.select().from(nodes)
 		.where(eq(nodes.id, id)))[0];
 
 	if (!node)
-		return { error: "Not found" };
+		throw "Not found";
 
 	if (node.id !== newNode.id || node.userId !== node.userId)
-		return { error: "Invalid fields" };
+		throw "Invalid fields";
 
 	if (process.env.IS_DEMO === "true")
-		return { data: newNode };
+		return newNode;
 
 	const editedNode = (await db.update(nodes).set(newNode)
 		.where(eq(nodes.id, id))
 		.returning())[0];
 
-	return { data: editedNode };
+	return editedNode;
 }
 
 export async function editNodesBulk(newNodes: Node[]): ActionRes<Node[]> {
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	const editedNodes = await Promise.all(newNodes.map(newNode => new Promise<Node>(async resolve => {
 		if (process.env.IS_DEMO === "true")
@@ -102,38 +98,38 @@ export async function editNodesBulk(newNodes: Node[]): ActionRes<Node[]> {
 			.where(eq(nodes.id, newNode.id)))[0];
 
 		if (!node)
-			return { error: "Not found" };
+			throw "Not found";
 
 		if (node.id !== newNode.id || node.userId !== newNode.userId)
-			return { error: "Invalid fields" };
+			throw "Invalid fields";
 
 		resolve((await db.update(nodes).set(newNode)
 			.where(eq(nodes.id, node.id))
 			.returning())[0]);
 	})));
 
-	return { data: editedNodes };
+	return editedNodes;
 }
 
 export async function deleteNode(id: string): ActionRes<void> {
 	const user = await auth();
 
 	if (!user?.user)
-		return { error: "Not authenticated" };
+		throw "Not authenticated";
 
 	if (process.env.IS_DEMO === "true")
-		return {};
+		return;
 
 	const node = (await db.select().from(nodes)
 		.where(eq(nodes.id, id)))[0];
 
 	if (!node)
-		return { error: "Not found" };
+		throw "Not found";
 
 	if (node.userId !== node.userId)
-		return { error: "Invalid fields" };
+		throw "Invalid fields";
 
 	await db.delete(nodes).where(eq(nodes.id, id));
 
-	return {};
+	return;
 }

@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import Spinner from "@/components/primitives/Spinner";
 import { PublicEnv } from "@/public-env";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
+import { Toaster } from "sonner";
+import { CheckCircle2, CircleAlert, Info } from "lucide-react";
 
 const lexend = Lexend({
 	variable: "--font-lexend",
@@ -60,6 +62,24 @@ export default function RootLayout({
 						</ThemeProvider>
 					</Suspense>
 				</SessionProvider>
+
+				<Toaster
+					className="toaster group"
+					theme="dark"
+					richColors
+					style={{
+						"--normal-bg": "var(--catppuccin-color-surface0)",
+						"--normal-text": "var(--catppuccin-color-text)",
+						"--normal-border": "var(--catppuccin-color-surface1)",
+					} as React.CSSProperties}
+					visibleToasts={5}
+					position="top-center"
+					icons={{
+						success: <CheckCircle2 size={20} />,
+						error: <CircleAlert size={20} />,
+						info: <Info size={20} />,
+					}}
+				/>
 
 				<div id="portal-root" />
 			</body>

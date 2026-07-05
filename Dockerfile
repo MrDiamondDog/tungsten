@@ -31,6 +31,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV CI=true
+ENV NODE_ENV=production
 
 RUN mkdir /app/data
 

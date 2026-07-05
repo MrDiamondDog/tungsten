@@ -6,7 +6,7 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/api/image/[filen
 	const user = await auth();
 
 	if (!user?.user)
-		return new NextResponse("Not authenticated");
+		return new NextResponse("Not authenticated", { status: 401 });
 
 	const { filename } = await ctx.params;
 

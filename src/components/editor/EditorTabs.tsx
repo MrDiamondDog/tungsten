@@ -3,7 +3,6 @@ import { Node } from "@/db/types";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import { X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function EditorTab({ tab, index }: { tab: Node, index: number }) {
@@ -13,8 +12,6 @@ export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 	const { ref } = useSortable({ id: tab.id, index, transition: { duration: 0, idle: false, easing: "linear" } });
 
 	const [hovered, setHovered] = useState(false);
-
-	const router = useRouter();
 
 	return <div
 		className={`
