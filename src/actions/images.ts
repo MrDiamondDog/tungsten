@@ -15,6 +15,9 @@ export default async function uploadImage(image: File): ActionRes<string> {
 	if (!user?.user)
 		return { error: "Not authenticated" };
 
+	if ((image.size / 1024 / 1024) > (parseInt(process.env.IMAGE_MAX_SIZE ?? "20")))
+		return { error: `File is too large (must be less than ${process.env.IMAGE_MAX_SIZE}mb)` };
+
 	if (!image || !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(image.type))
 		return { error: "Invalid fields" };
 

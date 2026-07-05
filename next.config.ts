@@ -1,13 +1,15 @@
 import "dotenv/config";
-import type { NextConfig, SizeLimit } from "next";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	output: "standalone",
 	experimental: {
 		serverActions: {
-			bodySizeLimit: (process.env.IMAGE_MAX_SIZE ?? "10mb") as SizeLimit,
+			// absurd limit here as to not bake the env variable into the image, as you can't change this after it's built
+			// real file size limit is enforced in server action
+			bodySizeLimit: "10gb",
 		},
-		proxyClientMaxBodySize: (process.env.IMAGE_MAX_SIZE ?? "10mb") as SizeLimit,
+		proxyClientMaxBodySize: "10gb",
 	},
 };
 

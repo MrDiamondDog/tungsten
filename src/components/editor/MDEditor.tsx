@@ -41,6 +41,7 @@ import Spinner from "../primitives/Spinner";
 import { getAllFilePaths, nodeFromPath } from "@/lib/utils/navigation";
 import { getTree } from "@/lib/utils/data";
 import { useTheme } from "../theme/ThemeContext";
+import { getPublicEnv } from "@/public-env";
 
 export default function MDEditor() {
 	const { nodes, selectedFile, cachedContent, unsavedFiles, viewMode } = useEditor();
@@ -213,7 +214,11 @@ export default function MDEditor() {
 							},
 						}),
 						imagePlugin({
-							imageUploadHandler: async file => (await uploadImage(file)).data!,
+							imageUploadHandler: async file => {
+								if ((file.size / 1024 / 1024) > parseInt(getPublicEnv().IMAGE_MAX_SIZE))
+									throw "Image too large.";
+								return (await uploadImage(file)).data!;
+							},
 							disableImageSettingsButton: true,
 							imagePlaceholder: () => <Spinner className="size-30 p-10 bg-ctp-surface0" />,
 						}),
