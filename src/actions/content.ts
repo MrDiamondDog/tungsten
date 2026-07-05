@@ -14,6 +14,15 @@ export async function getContent(nodeId: string): ActionRes<FileContent> {
 		throw "Not authenticated";
 
 	if (process.env.IS_DEMO === "true" && nodeId !== "0") {
+		return {
+			id: randomUUID(),
+			userId: user.user.id!,
+			nodeId,
+			content: "",
+		};
+	}
+
+	if (process.env.IS_DEMO === "true" && nodeId === "0") {
 		const res = await fetch("https://raw.githubusercontent.com/MrDiamondDog/tungsten/refs/heads/master/DEMO_README.md").then(res => res.text());
 		return {
 			id: randomUUID(),

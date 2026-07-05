@@ -65,6 +65,9 @@ export async function editNode(id: string, newNode: Node): ActionRes<Node> {
 	if (!user?.user)
 		throw "Not authenticated";
 
+	if (process.env.IS_DEMO === "true")
+		return newNode;
+
 	const node = (await db.select().from(nodes)
 		.where(eq(nodes.id, id)))[0];
 
@@ -73,9 +76,6 @@ export async function editNode(id: string, newNode: Node): ActionRes<Node> {
 
 	if (node.id !== newNode.id || node.userId !== node.userId)
 		throw "Invalid fields";
-
-	if (process.env.IS_DEMO === "true")
-		return newNode;
 
 	const editedNode = (await db.update(nodes).set(newNode)
 		.where(eq(nodes.id, id))
