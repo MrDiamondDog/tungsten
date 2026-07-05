@@ -7,5 +7,5 @@ export function error(e: string): string {
 
 export function throwToast(title: string, e?: string): any {
 	toast.error(title, { description: e });
-	throw e;
+	throw e ?? title;
 }

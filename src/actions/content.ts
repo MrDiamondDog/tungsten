@@ -13,13 +13,15 @@ export async function getContent(nodeId: string): ActionRes<FileContent> {
 	if (!user?.user)
 		throw "Not authenticated";
 
-	if (process.env.IS_DEMO === "true" && nodeId !== "0")
+	if (process.env.IS_DEMO === "true" && nodeId !== "0") {
+		const res = await fetch("https://raw.githubusercontent.com/MrDiamondDog/tungsten/refs/heads/master/DEMO_README.md").then(res => res.text());
 		return {
 			id: randomUUID(),
 			userId: user.user.id!,
 			nodeId,
-			content: "",
+			content: res,
 		};
+	}
 
 	const content = (await db.select().from(fileContents)
 		.where(eq(fileContents.nodeId, nodeId)))[0];
