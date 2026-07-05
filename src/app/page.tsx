@@ -7,6 +7,7 @@ import { throwToast } from "@/lib/utils/errors";
 import { getPublicEnv } from "@/public-env";
 import { ChevronDown } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { FaGithub } from "react-icons/fa6";
 
 export function LandingDetail({ image, children, reverse }: { image: string, reverse?: boolean } & React.PropsWithChildren) {
 	return <div className={`flex gap-10 mx-40 pb-20 *:w-full items-center ${reverse && "flex-row-reverse"}`}>
@@ -31,23 +32,26 @@ export default function LandingPage() {
 
 	return <main className={`w-full h-full overflow-x-hidden ${theme} text-ctp-text`}>
 		<div className="w-full h-screen bg-linear-to-br from-ctp-mantle to-ctp-surface0 relative">
-			<div className="absolute-center text-center">
+			<div className="absolute-center text-center flex flex-col gap-1">
 				<h1 className="flex gap-1 items-center w-full justify-center"><img src="/tungsten.svg" width={50} height={50} /> Tungsten</h1>
 				{demo && <>
 					<p>The self-hosted Obsidian alternative in your browser.<br />Fast and intuitive!</p>
 					<Divider />
 				</>}
-				<div className="flex gap-2">
+				<div className="flex gap-1">
 					{demo ? <>
 						<Button look={ButtonLooks.SECONDARY} onClick={demoLogin}>Try the Demo</Button>
 						<a href="https://github.com/mrdiamonddog/tungsten/tree/master/SELFHOST.md" className="w-full">
-							<Button>Get Started</Button>
+							<Button>Self Host</Button>
 						</a>
 					</> : <>
 						<a href="/auth" className="w-full">
 							<Button>Log In</Button>
 						</a>
 					</>}
+				</div>
+				<div className="flex gap-2 justify-center items-center w-full mt-2">
+					<a href="https://github.com/mrdiamonddog/tungsten" target="_blank"><FaGithub size={32} /></a>
 				</div>
 			</div>
 			{demo && <ChevronDown className="absolute left-1/2 bottom-5 -translate-x-1/2 animate-bounce" size={50} />}
