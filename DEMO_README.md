@@ -24,4 +24,4 @@ Quadratic Formula: <MathEditor value="x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" />
 
 GitHub: [https://github.com/mrdiamonddog/tungsten](https://github.com/mrdiamonddog/tungsten)
 
-<img src="https://stardance.hackclub.com/assets/landing/header/stardance-logo-df399a7f.png" />
+<img height="188" width="495" src="https://stardance.hackclub.com/assets/landing/header/stardance-logo-df399a7f.png" />
