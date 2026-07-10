@@ -67,8 +67,8 @@ export default function LandingPage() {
 			<LandingDetail image="/sync.png" reverse>
 				<h2>Syncing</h2>
 				<p>
-					Your account data will sync across devices using a local database stored on your hardware.
-					This data is never sent anywhere outside of your hardware or the devices accessing your instance.
+					Your account data will sync across devices using a local database stored on the device hosting Tungsten.
+					This data is never sent anywhere outside of your instance or the devices accessing your instance.
 				</p>
 			</LandingDetail>
 			<LandingDetail image="/import-export.png">
