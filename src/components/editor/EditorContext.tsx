@@ -11,7 +11,7 @@ export type EditorData = {
 	selectedFile?: string;
 	openFiles: string[];
 	unsavedFiles: string[];
-	viewMode: "normal" | "raw" | "readonly";
+	viewMode: "normal" | "raw" | "readonly" | "pdf";
 }
 
 export const defaultEditorData: EditorData = {
@@ -33,7 +33,7 @@ export type EditorAction =
 	{ type: "close-file", file: string } |
 	{ type: "set-open-files", openFiles: string[] } |
 	{ type: "cache-content", nodeId: string, content: string } |
-	{ type: "update-view-mode", viewMode: "normal" | "raw" | "readonly" } |
+	{ type: "update-view-mode", viewMode: "normal" | "raw" | "readonly" | "pdf" } |
 	{ type: "add-unsaved-file", file: string } |
 	{ type: "remove-unsaved-file", file: string };
 

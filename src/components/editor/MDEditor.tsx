@@ -165,8 +165,15 @@ export default function MDEditor() {
 		return () => window.removeEventListener("keydown", onKeyDown);
 	}, [file]);
 
+	useEffect(() => {
+		if (viewMode === "pdf" && file) {
+			document.title = file?.name ?? "Tungsten";
+			setTimeout(print, 3000);
+		}
+	}, [file, viewMode]);
+
 	return (
-		<div className={`w-full h-full overflow-hidden ${(!file || loading) ? "bg-ctp-mantle opacity-50" : ""}`}>
+		<div className={`w-full h-full ${viewMode !== "pdf" && "overflow-hidden"} ${(!file || loading) ? "bg-ctp-mantle opacity-50" : ""}`}>
 			{(file && !loading && viewMode === "raw") && <textarea
 				className="w-full h-full overflow-y-scroll resize-none p-2 font-mono"
 				defaultValue={content.current}
@@ -178,15 +185,15 @@ export default function MDEditor() {
 			/>}
 			<div className={`${file && !loading && viewMode !== "raw" ? "" : "hidden"} h-full`}>
 				<MDXEditor
-					className="dark-theme dark-editor"
-					contentEditableClassName={`text-ctp-text! overflow-y-scroll ${viewMode !== "readonly" && "absolute inset-0 pt-0!"}`}
+					className={viewMode !== "pdf" ? "dark-theme dark-editor" : "light-theme light-editor"}
+					contentEditableClassName={`overflow-y-scroll ${viewMode === "pdf" ? "text-black" : "text-ctp-text!"} ${viewMode !== "readonly" && viewMode !== "pdf" && "absolute inset-0 pt-0!"}`}
 					markdown={initialContent}
 					onChange={v => {
 						setSaved(false);
 						content.current = v;
 					}}
 					autoFocus
-					readOnly={viewMode === "readonly"}
+					readOnly={viewMode === "readonly" || viewMode === "pdf"}
 					ref={editorRef}
 					plugins={[
 						headingsPlugin(),
@@ -223,14 +230,14 @@ export default function MDEditor() {
 						}),
 						codeMirrorPlugin({
 							codeBlockLanguages: languages,
-							codeMirrorExtensions: [theme !== "latte" ? catppuccinMocha : githubLight],
+							codeMirrorExtensions: [theme !== "latte" && viewMode !== "pdf" ? catppuccinMocha : githubLight],
 						}),
 						tablePlugin(),
 						jsxPlugin({ jsxComponentDescriptors: [mathEditorDescriptor] }),
 						markdownShortcutPlugin(),
 						toolbarPlugin({
 							toolbarClassName: "mdx-toolbar",
-							toolbarContents: () => <div className="flex w-full justify-between items-center" data-hidden={viewMode === "readonly"}>
+							toolbarContents: () => <div className="flex w-full justify-between items-center" data-hidden={viewMode === "readonly" || viewMode === "pdf"}>
 								<div className="flex">
 									<UndoRedo />
 									<BoldItalicUnderlineToggles />

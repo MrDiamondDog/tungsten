@@ -110,7 +110,36 @@ blockquote {
 	--baseTextContrast: var(--catppuccin-color-text) !important;
 }
 
-.mdxeditor {
+.light-editor {
+	--accentBase: var(--catppuccin-color-blue-100) !important;
+	--accentBgSubtle: var(--catppuccin-color-blue-200) !important;
+	--accentBg: var(--catppuccin-color-blue-300) !important;
+	--accentBgHover: var(--catppuccin-color-blue-400) !important;
+	--accentBgActive: var(--catppuccin-color-blue-500) !important;
+	--accentLine: var(--catppuccin-color-blue-600) !important;
+	--accentBorder: var(--catppuccin-color-blue-700) !important;
+	--accentBorderHover: var(--catppuccin-color-blue-800) !important;
+	--accentSolid: var(--catppuccin-color-blue-900) !important;
+	--accentSolidHover: var(--catppuccin-color-blue-800) !important;
+	--accentText: var(--catppuccin-color-text) !important;
+	--accentTextContrast: var(--catppuccin-color-text) !important;
+
+	--basePageBg: var(--catppuccin-color-base) !important;
+	--baseBase: var(--catppuccin-color-base) !important;
+	--baseBgSubtle: var(--catppuccin-color-base) !important;
+	--baseBg: var(--catppuccin-color-surface0) !important;
+	--baseBgHover: var(--catppuccin-color-surface0) !important;
+	--baseBgActive: var(--catppuccin-color-surface1) !important;
+	--baseLine: var(--catppuccin-color-surface0) !important;
+	--baseBorder: var(--catppuccin-color-surface0) !important;
+	--baseBorderHover: var(--catppuccin-color-surface1) !important;
+	--baseSolid: var(--catppuccin-color-surface0) !important;
+	--baseSolidHover: var(--catppuccin-color-surface1) !important;
+	--baseText: black;
+	--baseTextContrast: black;
+}
+
+.mdxeditor:not(.light-editor) {
 	height: 100%;
 	overflow: hidden;
 }

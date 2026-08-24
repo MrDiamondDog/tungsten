@@ -26,7 +26,7 @@ export function MenuBarItem({ trigger, ...props }: { trigger: React.ReactNode } 
 }
 
 export default function MenuBar() {
-	const { viewMode } = useEditor();
+	const { viewMode, selectedFile } = useEditor();
 	const { theme, setTheme } = useTheme();
 	const dispatch = useEditorDispatch();
 
@@ -55,8 +55,7 @@ export default function MenuBar() {
 				<DropdownItem onClick={() => onCreate("file")}>New File</DropdownItem>
 				<DropdownItem onClick={() => onCreate("folder")}>New Folder</DropdownItem>
 				<DropdownSeparator />
-				<DropdownItem>Import</DropdownItem>
-				<DropdownItem>Export</DropdownItem>
+				<DropdownItem disabled={!selectedFile} onClick={() => window.open(`/editor/raw/${selectedFile!}`)}>Print</DropdownItem>
 			</MenuBarItem>
 			<MenuBarItem trigger="Edit">
 				<DropdownItem>Rename</DropdownItem>
