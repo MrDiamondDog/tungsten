@@ -46,7 +46,7 @@ export function DropdownContent(props: DropdownMenuContentProps) {
 
 export function DropdownItem(props: DropdownMenuItemProps) {
 	return (<DropdownMenuItem {...props}
-		className={`${props.className ?? ""} px-2 py-1 enabled:hover:bg-ctp-surface0 data-[disabled]:text-ctp-surface2 data-[disabled]:pointer-events-none enabled:cursor-pointer outline-none transition-all`}>
+		className={`${props.className ?? ""} px-2 py-1 not-[data-disabled]:hover:bg-ctp-surface0 data-[disabled]:text-ctp-surface2 data-[disabled]:pointer-events-none not-[data-disabled]:cursor-pointer outline-none transition-all`}>
 		{props.children}
 	</DropdownMenuItem>);
 }
