@@ -255,9 +255,9 @@ math-field {
 	border-radius: 0;
 
 	--primary: var(--catppuccin-color-blue-500);
-	--caret-color: var(--catppuccin-color-text);
-	--selection-color: var(--catppuccin-color-base);
-	--selection-background-color: var(--catppuccin-color-surface0);
+	--caret-color: var(--catppuccin-color-blue-500);
+	--selection-color: var(--catppuccin-color-blue-500);
+	--selection-background-color: var(--catppuccin-color-surface1);
 	--contains-highlight-background-color: var(--catppuccin-color-surface0);
 
 	&:focus {
@@ -270,5 +270,9 @@ math-field {
 
 	&::part(menu-toggle) {
 		display: none;
+	}
+
+	&::part(container) {
+		padding: 0;
 	}
 }

@@ -186,7 +186,8 @@ export default function MDEditor() {
 			<div className={`${file && !loading && viewMode !== "raw" ? "" : "hidden"} h-full`}>
 				<MDXEditor
 					className={viewMode !== "pdf" ? "dark-theme dark-editor" : "light-theme light-editor"}
-					contentEditableClassName={`overflow-y-scroll ${viewMode === "pdf" ? "text-black" : "text-ctp-text!"} ${viewMode !== "readonly" && viewMode !== "pdf" && "absolute inset-0 pt-0!"}`}
+					contentEditableClassName={`overflow-y-scroll ${viewMode === "pdf" ? "text-black" : "text-ctp-text!"}
+						${viewMode !== "readonly" && viewMode !== "pdf" && "absolute inset-0 pt-0!"}`}
 					markdown={initialContent}
 					onChange={v => {
 						setSaved(false);
@@ -237,7 +238,10 @@ export default function MDEditor() {
 						markdownShortcutPlugin(),
 						toolbarPlugin({
 							toolbarClassName: "mdx-toolbar",
-							toolbarContents: () => <div className="flex w-full justify-between items-center" data-hidden={viewMode === "readonly" || viewMode === "pdf"}>
+							toolbarContents: () => <div
+								className="flex w-full justify-between items-center"
+								data-hidden={viewMode === "readonly" || viewMode === "pdf"}
+							>
 								<div className="flex">
 									<UndoRedo />
 									<BoldItalicUnderlineToggles />
