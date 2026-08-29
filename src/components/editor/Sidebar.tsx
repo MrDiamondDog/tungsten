@@ -189,7 +189,17 @@ export default function Sidebar() {
 		<ContextMenu>
 			<ContextMenuTrigger asChild>
 				<div className="w-fit min-w-75 h-full p-2 border-r border-ctp-surface0">
-					<Tree data={tree} rowHeight={32} indent={16} width="fit" ref={treeRef} onMove={onMove} onRename={onRename} onCreate={onCreate}>
+					<Tree
+						data={tree}
+						rowHeight={32}
+						indent={16}
+						width="fit"
+						ref={treeRef}
+						onMove={onMove}
+						onRename={onRename}
+						onCreate={onCreate}
+						openByDefault={false}
+					>
 						{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 							{!node.isEditing && (node.isLeaf ?
 								<SidebarFile
