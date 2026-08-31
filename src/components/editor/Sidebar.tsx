@@ -38,16 +38,16 @@ export function SidebarFile({
 			<ContextMenuTrigger asChild>
 				<button
 					className={`${(selected && !isFolder) ? "bg-ctp-surface0" : "hover:bg-ctp-surface0"}
-		w-full text-left py-1 cursor-pointer transition-colors flex justify-between items-center outline-none`}
+		w-full text-left py-1 cursor-pointer transition-colors flex justify-between items-center outline-none overflow-hidden`}
 					{...props}
 				>
-					<div className="flex gap-1 items-center px-2">
+					<div className="flex gap-1 items-center px-2 w-full [&_svg]:min-w-4.5">
 						{isFolder ? (
 							selected ? <FolderOpen size={18} /> : <Folder size={18} />
 						) : (
 							<FileIcon size={18} />
 						)}{" "}
-						{data.name}
+						<p className="w-full overflow-hidden text-ellipsis text-nowrap">{data.name}</p>
 					</div>
 				</button>
 			</ContextMenuTrigger>
@@ -82,7 +82,7 @@ export function SidebarFileEdit({ initialName, onEditFinish, isFolder }: {
 	}
 
 	return <div className="w-full text-left py-1 cursor-pointer transition-colors flex justify-between items-center">
-		<div className="flex gap-1 items-center px-2">
+		<div className="w-full flex gap-1 items-center px-2 overflow-hidden">
 			{isFolder ? <Folder size={18} /> : <FileIcon size={18} />}{" "}
 			<Input value={name} onChange={setName} onKeyDown={e => (e.key === "Enter" || e.key === "Escape") && submit(e.key === "Escape")}
 				onBlur={() => submit()} className="h-fit py-0 px-1" autoFocus id="rename-input" onFocus={e => e.target.select()} />
@@ -188,7 +188,7 @@ export default function Sidebar() {
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger asChild>
-				<div className="w-fit min-w-75 h-full p-2 border-r border-ctp-surface0">
+				<div className="w-fit min-w-75 h-full p-2 border-r border-ctp-surface0 [&>div]:h-full! **:[[role=treeitem]]:w-full! **:[[role=treeitem]]:min-w-full!">
 					<Tree
 						data={tree}
 						rowHeight={32}
@@ -199,6 +199,7 @@ export default function Sidebar() {
 						onRename={onRename}
 						onCreate={onCreate}
 						openByDefault={false}
+						className="h-full!"
 					>
 						{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 							{!node.isEditing && (node.isLeaf ?

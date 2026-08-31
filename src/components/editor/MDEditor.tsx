@@ -154,7 +154,10 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
+			console.log(e);
 			if (e.key === "s" && e.ctrlKey) {
+				e.stopPropagation();
+				e.stopImmediatePropagation();
 				e.preventDefault();
 				save();
 			}
@@ -167,7 +170,7 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		if (viewMode === "pdf" && file) {
-			document.title = file?.name ?? "Tungsten";
+			document.title = file?.name ?? "Tungsten Document";
 			setTimeout(print, 3000);
 		}
 	}, [file, viewMode]);
