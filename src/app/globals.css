@@ -246,6 +246,14 @@ div:has(> div > div.cm-editor) {
 	font-size: 13px;
 }
 
+.light-editor [class*=_codeMirrorToolbar] {
+	display: none;
+}
+
+.light-editor .cm-foldGutter .cm-gutterElement {
+	display: none;
+}
+
 /* Math editor */
 math-field {
 	background-color: transparent;
