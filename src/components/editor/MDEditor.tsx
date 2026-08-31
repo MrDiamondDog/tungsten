@@ -154,7 +154,6 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			console.log(e);
 			if (e.key === "s" && e.ctrlKey) {
 				e.stopPropagation();
 				e.stopImmediatePropagation();

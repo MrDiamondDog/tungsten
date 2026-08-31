@@ -3,7 +3,7 @@ import { Node } from "@/db/types";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 	const { nodes, selectedFile, unsavedFiles } = useEditor();
@@ -41,8 +41,23 @@ export function EditorTab({ tab, index }: { tab: Node, index: number }) {
 }
 
 export default function EditorTabs() {
-	const { nodes, openFiles } = useEditor();
+	const { nodes, openFiles, selectedFile } = useEditor();
 	const dispatch = useEditorDispatch();
+
+	useEffect(() => {
+		function onKeyDown(e: KeyboardEvent) {
+			if (!selectedFile)
+				return;
+			if (e.ctrlKey && e.key === "q") {
+				e.preventDefault();
+				e.stopPropagation();
+				dispatch?.({ type: "close-file", file: selectedFile });
+			}
+		}
+
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, [selectedFile]);
 
 	return !!openFiles.length ? <DragDropProvider onDragEnd={event => {
 		if (event.canceled)
