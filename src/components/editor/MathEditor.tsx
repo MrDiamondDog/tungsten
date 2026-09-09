@@ -69,6 +69,12 @@ export default function MathEditor({ onChange, value }:
 			return;
 
 		ref.current.mathModeSpace = "\\:";
+		ref.current.inlineShortcuts = {
+			...ref.current.inlineShortcuts,
+			nat: "\\mathbb{N}",
+			real: "\\mathbb{R}",
+			rat: "\\mathbb{Q}",
+		}
 		renderMathInDocument();
 
 		if (value === "")
