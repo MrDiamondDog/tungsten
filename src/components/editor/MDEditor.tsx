@@ -11,6 +11,7 @@ import {
 	headingsPlugin,
 	imagePlugin,
 	InsertCodeBlock,
+	insertJsx$,
 	InsertTable,
 	InsertThematicBreak,
 	jsxPlugin,
@@ -26,6 +27,7 @@ import {
 	thematicBreakPlugin,
 	toolbarPlugin,
 	UndoRedo,
+	usePublisher,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import { useEffect, useRef, useState } from "react";
@@ -60,6 +62,8 @@ export default function MDEditor() {
 	const editorRef = useRef<MDXEditorMethods>(null);
 
 	const nodeListRef = useRef(nodes);
+
+	const insertJsx = usePublisher(insertJsx$);
 
 	useEffect(() => {
 		nodeListRef.current = nodes;
@@ -154,7 +158,9 @@ export default function MDEditor() {
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
-			if (e.key === "s" && e.ctrlKey) {
+			if (!e.ctrlKey)
+				return;
+			if (e.key === "s") {
 				e.stopPropagation();
 				e.stopImmediatePropagation();
 				e.preventDefault();

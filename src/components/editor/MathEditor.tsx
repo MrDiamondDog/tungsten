@@ -28,6 +28,26 @@ export const mathEditorDescriptor: JsxComponentDescriptor = {
 export function InsertMathButton() {
 	const insertJsx = usePublisher(insertJsx$);
 
+	useEffect(() => {
+		function onKeyDown(e: KeyboardEvent) {
+			if (!e.ctrlKey)
+				return;
+
+			if (e.key === "m") {
+				e.preventDefault();
+				insertJsx({
+					name: "MathEditor",
+					kind: "text",
+					props: { value: "" },
+				})
+			}
+		}
+
+		window.addEventListener("keydown", onKeyDown);
+
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, []);
+
 	return <Button
 		onClick={() => insertJsx({
 			name: "MathEditor",
