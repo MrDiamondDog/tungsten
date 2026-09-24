@@ -11,6 +11,7 @@ import Input from "../primitives/Input";
 import { Node } from "@/db/types";
 import { folderContents } from "@/lib/utils/navigation";
 import { throwToast } from "@/lib/utils/errors";
+import useMeasure from "react-use-measure";
 
 export function SidebarFile({
 	data,
@@ -96,6 +97,7 @@ export default function Sidebar() {
 	const [tree, setTree] = useState<FileTree>();
 
 	const treeRef = useRef<TreeApi<TreeItem> | undefined>(undefined);
+	const [measureRef, bounds] = useMeasure();
 	const nodeListRef = useRef(nodes);
 
 	useEffect(() => {
@@ -188,18 +190,22 @@ export default function Sidebar() {
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger asChild>
-				<div className="w-fit min-w-75 h-full p-2 border-r border-ctp-surface0 [&>div]:h-full! **:[[role=treeitem]]:w-full! **:[[role=treeitem]]:min-w-full!">
+				<div
+					className={`w-fit min-w-75 h-full p-2 border-r border-ctp-surface0 overflow-x-hidden overflow-y-scroll
+						**:[[role=treeitem]]:w-full! **:[[role=treeitem]]:min-w-full! pb-8`}
+					ref={measureRef}
+				>
 					<Tree
 						data={tree}
+						width={bounds.width}
+						height={bounds.height}
 						rowHeight={32}
 						indent={16}
-						width="fit"
 						ref={treeRef}
 						onMove={onMove}
 						onRename={onRename}
 						onCreate={onCreate}
 						openByDefault={false}
-						className="h-full!"
 					>
 						{({ node, dragHandle, style }) => (<div ref={dragHandle} key={node.data.id}>
 							{!node.isEditing && (node.isLeaf ?

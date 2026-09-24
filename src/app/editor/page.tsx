@@ -8,7 +8,7 @@ export default function EditorPage() {
 	const { theme } = useTheme();
 
 	return (
-		<main className={`w-full h-full flex flex-col bg-ctp-base text-ctp-text ${theme}`}>
+		<main className={`w-full h-full flex flex-col bg-ctp-base text-ctp-text overflow-hidden ${theme}`}>
 			<MenuBar />
 			<Editor />
 		</main>
